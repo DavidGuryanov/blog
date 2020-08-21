@@ -1,0 +1,39 @@
+.navbar {
+    width: 100%;
+    height: 80px;
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: row;
+}
+.btn {
+    width: 84px;
+    height: 35px;
+    font-size: 18px;
+    line-height: 28px;
+    color: rgba(0,0,0,0.85);
+    outline: none;
+    background-color: #ffffff;
+    font-family: 'Inter', sans-serif;
+    margin: auto 22px auto 0;
+    border: none
+}
+.signUpBtn {
+    color: #52C41A;
+    border: solid #52c41a 1px;
+    border-radius: 5px;
+    width: 109px;
+    height: 51px;
+}
+
+.signInBtn {
+    margin-left: auto;
+}
+.header {
+    font-family: 'Inter', sans-serif;
+    color: rgba(0,0,0,0.85);
+    font-size: 18px;
+    line-height: 28px;
+    margin: 0;
+    font-weight: normal;
+    margin: auto 0 auto 22px;
+}
