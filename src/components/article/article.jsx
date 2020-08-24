@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import * as actions from "../../actions/actions";
@@ -28,7 +28,6 @@ function getTags(tags) {
 }
 
 const ArticleHeader = (props) => {
-  console.log(props);
   const { article } = props;
   const {
     author: { bio, following, image, username },
@@ -42,7 +41,7 @@ const ArticleHeader = (props) => {
     title,
     updatedAt,
   } = article;
-  console.log(article);
+
   return (
     <div className={styles.article__header}>
       <div className={styles.header__likes}>
@@ -51,7 +50,6 @@ const ArticleHeader = (props) => {
           <Statistic value={favoritesCount} prefix={<HeartOutlined />} />
         </div>
         {getTags(tagList)}
-        {/* <Tag>Tag 1</Tag> */}
         <div className={styles.article__annotation}>{description}</div>
       </div>
 
@@ -66,44 +64,58 @@ const ArticleHeader = (props) => {
   );
 };
 
-const Article = (props) => {
-  // console.log(props);
-  // const temp = props.fetchSingleArticle(props.slug);
-  // console.log(temp);
-  const slug = props.slug;
-  const { article } = props;
+const Article = ({ slug, result, fetchSingleArticle, getSingleArticle }) => {
   const {
-    author: { bio, following, image, username },
-    body,
-    createdAt,
-    description,
-    favorited,
-    favoritesCount,
+    article: { article: currentArticle },
+    loading,
+  } = result;
 
-    tagList,
-    title,
-    updatedAt,
-  } = article;
-  return (
-    <div className={styles.article__container}>
-      <button onClick={() => props.fetchSingleArticle(props.slug)}>Test</button>
-      <ArticleHeader article={article}></ArticleHeader>
-      <div className={styles.article__text}>{body}</div>
-    </div>
-  );
+  useEffect(() => {
+    fetchSingleArticle(slug);
+    return function cleanup() {
+      getSingleArticle("remove");
+    };
+  }, []);
+
+  if (currentArticle) {
+    const {
+      author: { bio, following, image, username },
+      body,
+      createdAt,
+      description,
+      favorited,
+      favoritesCount,
+
+      tagList,
+      title,
+      updatedAt,
+    } = currentArticle;
+    return (
+      <div className={styles.article__container}>
+        <ArticleHeader article={currentArticle}></ArticleHeader>
+        <div className={styles.article__text}>{body}</div>
+      </div>
+    );
+  }
+
+  return <div className={styles.article__container}>Loading</div>;
 };
 
 const mapStateToProps = (state) => {
   //console.log(state);
   return {
-    test: { ...state.reducerGetSingleArticle },
+    result: { ...state.reducerGetSingleArticle },
   };
 };
 const mapDispatchToProps = (dispatch) => {
   // console.log(dispatch);
-  const { fetchSingleArticle } = bindActionCreators(actions, dispatch);
+  const { fetchSingleArticle, getSingleArticle } = bindActionCreators(
+    actions,
+    dispatch
+  );
   return {
     fetchSingleArticle,
+    getSingleArticle,
     // sortFast,
     // transferAll,
     // transferNone,

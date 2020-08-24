@@ -1,4 +1,5 @@
 import React from "react";
+import { withRouter } from "react-router-dom";
 import { Statistic, Tag, Avatar } from "antd";
 import { HeartOutlined } from "@ant-design/icons";
 import { format } from "date-fns";
@@ -24,8 +25,7 @@ function getTags(tags) {
   }
 }
 
-const ArticleHeader = (props) => {
-  const { article } = props;
+const ArticleHeader = ({ article, history, location, match, short }) => {
   const {
     author: { bio, following, image, username },
     body,
@@ -43,10 +43,15 @@ const ArticleHeader = (props) => {
     <div className={styles.article__header}>
       <div className={styles.header__likes}>
         <div className={styles.article__likes}>
-          <h2 className={styles.article__title}>{title}</h2>
+          <h2
+            className={styles.article__title}
+            onClick={() => history.push(`/article/${slug}`)}
+          >
+            {title}
+          </h2>
           <Statistic value={favoritesCount} prefix={<HeartOutlined />} />
         </div>
-        {getTags(tagList)}
+        <div className={styles.tags}>{getTags(tagList)}</div>
 
         <div className={styles.article__annotation}>{description}</div>
       </div>
@@ -62,4 +67,4 @@ const ArticleHeader = (props) => {
   );
 };
 
-export default ArticleHeader;
+export default withRouter(ArticleHeader);

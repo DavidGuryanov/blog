@@ -1,5 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
+import * as actions from "../../actions/actions";
+import { bindActionCreators } from "redux";
 import Article from "../article/article";
 import ArticleHeader from "../article-header/articleHeader";
 import { Pagination } from "antd";
@@ -7,8 +9,7 @@ import "antd/dist/antd.css";
 import "./articleList_antd.css";
 import * as styles from "./articleList.module.scss";
 
-const ArticleList = (props) => {
-  const { articles } = props;
+const ArticleList = ({ articles, fetchArticles }) => {
   const articlesToShow = Object.values(articles);
   let count = 0;
   const show = articlesToShow.map((value) => {
@@ -18,7 +19,14 @@ const ArticleList = (props) => {
   return (
     <div className={styles.article__container}>
       {show}
-      <Pagination defaultCurrent={1} total={50} />
+      <Pagination
+        defaultCurrent={1}
+        total={500}
+        showSizeChanger={false}
+        onChange={(page) => {
+          fetchArticles(page * 10 - 10);
+        }}
+      />
     </div>
   );
 };
@@ -27,4 +35,11 @@ const mapStateToProps = (state) => {
     articles: { ...state.reducerGetArticles.articles },
   };
 };
-export default connect(mapStateToProps)(ArticleList);
+const mapDispatchToProps = (dispatch) => {
+  // console.log(dispatch);
+  const { fetchArticles } = bindActionCreators(actions, dispatch);
+  return {
+    fetchArticles,
+  };
+};
+export default connect(mapStateToProps, mapDispatchToProps)(ArticleList);

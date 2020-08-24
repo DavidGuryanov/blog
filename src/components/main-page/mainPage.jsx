@@ -1,4 +1,6 @@
 import React from "react";
+import { bindActionCreators } from "redux";
+import * as actions from "../../actions/actions";
 import NavBar from "../nav-bar/navBar";
 import SignIn from "../sign-in/signIn";
 import SignUp from "../sign-up/signUp";
@@ -10,21 +12,8 @@ import EditArticle from "../edit-article/editArticle";
 import { connect } from "react-redux";
 import * as styles from "../main-page/mainPage.module.scss";
 import { BrowserRouter as Router, Route } from "react-router-dom";
-const test = {
-  author: { username: "Timo Harmonen", bio: "", image: "", following: false },
-  body: "## catch the big fish!",
-  createdAt: "2020-08-23T15:17:37.953Z",
-  description: "fishing",
-  favorited: false,
-  favoritesCount: 2,
-  slug: "wanna-go-fishing-2j6oyx",
-  tagList: [],
-  title: "Wanna go fishing",
-  updatedAt: "2020-08-23T15:17:37.953Z",
-};
 
-const MainPage = (props) => {
-  const { articles } = props;
+const MainPage = ({ articles, fetchArticles }) => {
   if (articles) {
     return (
       <div className={styles.main}>
@@ -33,11 +22,11 @@ const MainPage = (props) => {
           {/* <ArticleList /> */}
           <Route path="/" exact component={ArticleList} />
           <Route
-            path="/articles/:slug"
+            path="/article/:slug"
             exact
             render={({ match }) => {
               const { slug } = match.params;
-              return <Article article={test} slug={slug} />;
+              return <Article slug={slug} />;
             }}
           />
           <Route path="/login" component={SignIn} />
@@ -59,5 +48,12 @@ const mapStateToProps = (state) => {
     articles: { ...state.reducerGetArticles.articles },
   };
 };
+const mapDispatchToProps = (dispatch) => {
+  // console.log(dispatch);
+  const { fetchArticles } = bindActionCreators(actions, dispatch);
+  return {
+    fetchArticles,
+  };
+};
 
-export default connect(mapStateToProps)(MainPage);
+export default connect(mapStateToProps, mapDispatchToProps)(MainPage);
