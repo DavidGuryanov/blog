@@ -1,0 +1,14 @@
+.ant-tag {
+  /* max-width: 110px !important; */
+  margin-right: auto;
+}
+.ant-statistic {
+  height: 28px;
+  margin: auto 0;
+}
+.ant-statistic-content {
+  font-size: 15px;
+}
+.ant-avatar {
+  margin-left: 12px;
+}

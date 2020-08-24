@@ -1,0 +1,18 @@
+.ant-pagination {
+  text-align: center;
+}
+.ant-pagination-item-active {
+  background-color: #1890ff !important;
+  border-radius: 4px !important;
+}
+.ant-pagination-item-active a {
+  color: #fff !important;
+}
+.ant-pagination-next .ant-pagination-item-link {
+  background-color: #e5e5e5;
+  border: none;
+}
+.ant-pagination-prev .ant-pagination-item-link {
+  background-color: #e5e5e5;
+  border: none;
+}
