@@ -18,7 +18,7 @@ const composeEnhancers =
 const enhancer = composeEnhancers(applyMiddleware(thunkMiddleware));
 const store = createStore(reducer, enhancer);
 const { dispatch } = store;
-dispatch(actions.fetchArticles());
+// dispatch(actions.fetchArticles());
 
 const Index = () => {
   return (

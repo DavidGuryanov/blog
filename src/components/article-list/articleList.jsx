@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import * as actions from "../../actions/actions";
 import { bindActionCreators } from "redux";
@@ -10,6 +10,9 @@ import "./articleList_antd.css";
 import * as styles from "./articleList.module.scss";
 
 const ArticleList = ({ articles, fetchArticles }) => {
+  useEffect(() => {
+    fetchArticles();
+  }, []);
   const articlesToShow = Object.values(articles);
   let count = 0;
   const show = articlesToShow.map((value) => {

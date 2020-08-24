@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { bindActionCreators } from "redux";
+import ReactMarkdown from "react-markdown";
 import { connect } from "react-redux";
 import * as actions from "../../actions/actions";
 import { Statistic, Tag, Avatar } from "antd";
@@ -93,7 +94,7 @@ const Article = ({ slug, result, fetchSingleArticle, getSingleArticle }) => {
     return (
       <div className={styles.article__container}>
         <ArticleHeader article={currentArticle}></ArticleHeader>
-        <div className={styles.article__text}>{body}</div>
+        <ReactMarkdown source={body} className={styles.article__text} />
       </div>
     );
   }
