@@ -2,20 +2,21 @@
   max-width: 941px;
   background-color: #ffffff;
   margin: 24px auto 0;
+  filter: drop-shadow(0px 4px 12px rgba(0, 0, 0, 0.15));
 }
 .article__header {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  margin-bottom: 26px;
   background-color: #ffffff;
   padding: 17px 14px 24px 19px;
-  filter: drop-shadow(0px 4px 12px rgba(0, 0, 0, 0.15));
+
   border-radius: 5px;
 }
 .header__likes {
   display: flex;
   flex-direction: column;
+  max-width: 75%;
 }
 .article__title {
   font-family: "Inter", sans-serif;
@@ -26,6 +27,7 @@
   color: #1890ff;
   margin-right: 13px;
   margin-bottom: 4px;
+  word-break: break-all;
 }
 .article__likes {
   display: flex;
@@ -39,6 +41,7 @@
   font-size: 12px;
   line-height: 22px;
   color: rgba(0, 0, 0, 0.5);
+  line-break: anywhere;
 }
 .article__author {
   display: flex;
@@ -63,7 +66,7 @@
 }
 .article__text {
   max-width: 880px;
-
+  overflow: auto;
   font-family: "Inter", sans-serif;
   font-style: normal;
   font-weight: normal;

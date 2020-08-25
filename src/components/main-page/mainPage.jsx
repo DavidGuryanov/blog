@@ -36,8 +36,8 @@ const MainPage = ({ articles, fetchArticles }) => {
                 return <Article slug={slug} />;
               }}
             />
-            <Route path="/login" exact component={SignIn} />
-            <Route path="/register" exact component={SignUp} />
+            <Route path="/sign-in/" exact component={SignIn} />
+            <Route path="/sign-up/" exact component={SignUp} />
             <Redirect to="/" />
           </Switch>
         </Router>

@@ -6,20 +6,21 @@ var classNames = require("classnames");
 const signUpBtn = classNames(styles.btn, styles.signUpBtn);
 const signInBtn = classNames(styles.btn, styles.signInBtn);
 
-const NavBar = () => {
+const NavBar = ({ history }) => {
   return (
     <div className={styles.navbar}>
-      <h2 className={styles.header}>
-        <Link to="/">Realworld Blog</Link>
+      <h2 className={styles.header} onClick={(e) => history.push("/")}>
+        Realworld Blog
       </h2>
-      <button className={signInBtn}>
-        <Link to="/login">Sign In</Link>
+      <button className={signInBtn} onClick={(e) => history.push("/sign-in/")}>
+        Sign in
       </button>
-      <button className={signUpBtn}>
-        <Link to="/register">Sign Up</Link>
+
+      <button className={signUpBtn} onClick={(e) => history.push("/sign-up/")}>
+        Sign up
       </button>
     </div>
   );
 };
 
-export default NavBar;
+export default withRouter(NavBar);

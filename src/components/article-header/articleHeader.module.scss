@@ -16,6 +16,7 @@
 .header__likes {
   display: flex;
   flex-direction: column;
+  max-width: 75%;
 }
 .article__title {
   font-family: "Inter", sans-serif;
@@ -27,6 +28,7 @@
   margin-right: 13px;
   margin-bottom: 4px;
   cursor: pointer;
+  word-break: break-all;
 }
 .article__likes {
   display: flex;
@@ -40,6 +42,7 @@
   font-size: 12px;
   line-height: 22px;
   color: rgba(0, 0, 0, 0.5);
+  line-break: anywhere;
 }
 .article__author {
   display: flex;

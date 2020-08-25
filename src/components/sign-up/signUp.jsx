@@ -5,15 +5,15 @@ const SignIn = () => {
   return (
     <div className={styles.sign__container}>
       <h4 className={styles.header}>Create new account</h4>
-      <label className={styles.sign__label} for="username">
+      <label className={styles.sign__label} htmlFor="username">
         Username
       </label>
       <input type="text" className={styles.input__field} id="username"></input>
-      <label className={styles.sign__label} for="email">
+      <label className={styles.sign__label} htmlFor="email">
         Email address
       </label>
       <input type="email" className={styles.input__field} id="email"></input>
-      <label className={styles.sign__label} for="password">
+      <label className={styles.sign__label} htmlFor="password">
         Password
       </label>
       <input
@@ -21,7 +21,7 @@ const SignIn = () => {
         className={styles.input__field}
         id="password"
       ></input>
-      <label className={styles.sign__label} for="repeat-password">
+      <label className={styles.sign__label} htmlFor="repeat-password">
         Repeat Password
       </label>
       <input
@@ -35,7 +35,7 @@ const SignIn = () => {
           className={styles.input__checbox}
           id="agree"
         ></input>
-        <label className={styles.sign__label_agree} for="agree">
+        <label className={styles.sign__label_agree} htmlFor="agree">
           I agree to the processing of my personal information
         </label>
       </div>

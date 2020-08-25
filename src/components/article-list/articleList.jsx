@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import * as actions from "../../actions/actions";
 import { bindActionCreators } from "redux";
@@ -14,6 +14,7 @@ const ArticleList = ({ articles, fetchArticles }) => {
   useEffect(() => {
     fetchArticles();
   }, []);
+  const [page, setPage] = useState(1);
   const articlesToShow = Object.values(articles);
   let count = 0;
   const show = articlesToShow.map((value) => {
@@ -25,11 +26,12 @@ const ArticleList = ({ articles, fetchArticles }) => {
       <div className={styles.article__container}>
         {show}
         <Pagination
-          defaultCurrent={1}
+          defaultCurrent={page}
           total={500}
           showSizeChanger={false}
-          onChange={(page) => {
-            fetchArticles(page * 10 - 10);
+          onChange={(index) => {
+            fetchArticles(index * 10 - 10);
+            setPage(index);
           }}
         />
       </div>
