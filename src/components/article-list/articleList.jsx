@@ -4,6 +4,7 @@ import * as actions from "../../actions/actions";
 import { bindActionCreators } from "redux";
 import Article from "../article/article";
 import ArticleHeader from "../article-header/articleHeader";
+import Loading from "../status/loading";
 import { Pagination } from "antd";
 import "antd/dist/antd.css";
 import "./articleList_antd.css";
@@ -19,19 +20,22 @@ const ArticleList = ({ articles, fetchArticles }) => {
     count += 1;
     return <ArticleHeader article={value} key={count} short={true} />;
   });
-  return (
-    <div className={styles.article__container}>
-      {show}
-      <Pagination
-        defaultCurrent={1}
-        total={500}
-        showSizeChanger={false}
-        onChange={(page) => {
-          fetchArticles(page * 10 - 10);
-        }}
-      />
-    </div>
-  );
+  if (show.length > 0) {
+    return (
+      <div className={styles.article__container}>
+        {show}
+        <Pagination
+          defaultCurrent={1}
+          total={500}
+          showSizeChanger={false}
+          onChange={(page) => {
+            fetchArticles(page * 10 - 10);
+          }}
+        />
+      </div>
+    );
+  }
+  return <Loading />;
 };
 const mapStateToProps = (state) => {
   return {

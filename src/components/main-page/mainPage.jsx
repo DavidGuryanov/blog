@@ -6,6 +6,7 @@ import SignIn from "../sign-in/signIn";
 import SignUp from "../sign-up/signUp";
 import EditAccount from "../edit-account/editAccount";
 import Article from "../article/article";
+import Loading from "../status/loading";
 import ArticleList from "../article-list/articleList";
 import CreateArticle from "../create-article/createArticle";
 import EditArticle from "../edit-article/editArticle";
@@ -39,6 +40,7 @@ const MainPage = ({ articles, fetchArticles }) => {
   return (
     <div className={styles.main}>
       <NavBar />
+      <h3>Error</h3>
     </div>
   );
 };

@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { bindActionCreators } from "redux";
+
 import ReactMarkdown from "react-markdown";
 import { connect } from "react-redux";
+import Loading from "../status/loading";
 import * as actions from "../../actions/actions";
 import { Statistic, Tag, Avatar } from "antd";
 import { HeartOutlined } from "@ant-design/icons";
@@ -99,7 +101,7 @@ const Article = ({ slug, result, fetchSingleArticle, getSingleArticle }) => {
     );
   }
 
-  return <div className={styles.article__container}>Loading</div>;
+  return <Loading />;
 };
 
 const mapStateToProps = (state) => {
