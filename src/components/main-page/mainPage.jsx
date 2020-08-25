@@ -12,7 +12,12 @@ import CreateArticle from "../create-article/createArticle";
 import EditArticle from "../edit-article/editArticle";
 import { connect } from "react-redux";
 import * as styles from "../main-page/mainPage.module.scss";
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Switch,
+  Redirect,
+} from "react-router-dom";
 
 const MainPage = ({ articles, fetchArticles }) => {
   if (articles) {
@@ -20,19 +25,21 @@ const MainPage = ({ articles, fetchArticles }) => {
       <div className={styles.main}>
         <Router>
           <NavBar />
-          {/* <ArticleList /> */}
-          <Route path="/" exact component={ArticleList} />
-          <Route
-            path="/article/:slug"
-            exact
-            render={({ match }) => {
-              const { slug } = match.params;
-              return <Article slug={slug} />;
-            }}
-          />
-          <Route path="/login" component={SignIn} />
-          <Route path="/register" component={SignUp} />
-          {/* <Route path="/article" component={Article} /> */}
+          <Switch>
+            <Route path="/" exact component={ArticleList} />
+            <Route path="/articles/" exact component={ArticleList} />
+            <Route
+              path="/articles/:slug"
+              exact
+              render={({ match }) => {
+                const { slug } = match.params;
+                return <Article slug={slug} />;
+              }}
+            />
+            <Route path="/login" exact component={SignIn} />
+            <Route path="/register" exact component={SignUp} />
+            <Redirect to="/" />
+          </Switch>
         </Router>
       </div>
     );

@@ -45,7 +45,7 @@ const ArticleHeader = ({ article, history, location, match, short }) => {
         <div className={styles.article__likes}>
           <h2
             className={styles.article__title}
-            onClick={() => history.push(`/article/${slug}`)}
+            onClick={() => history.push(`/articles/${slug}`)}
           >
             {title}
           </h2>
