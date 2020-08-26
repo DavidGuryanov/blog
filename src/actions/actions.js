@@ -1,6 +1,3 @@
-export const login = () => {
-  return { type: "LOGIN" };
-};
 export const getArticles = (array) => {
   return { type: "GET_ARTICLES", payload: array };
 };
@@ -29,5 +26,68 @@ export function fetchSingleArticle(slug) {
         return response.json();
       })
       .then((json) => dispatch(getSingleArticle(json)));
+  };
+}
+
+export const login = (userInfo) => {
+  return { type: "LOGIN", payload: userInfo };
+};
+
+export function fetchLogin(credentials) {
+  return (dispatch) => {
+    dispatch(login());
+    const { email, password } = credentials;
+    return fetch(`https://conduit.productionready.io/api/users/login`, {
+      method: "POST",
+      mode: "cors",
+      cache: "no-cache",
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+      redirect: "follow",
+      referrerPolicy: "no-referrer",
+      body: JSON.stringify({
+        user: {
+          email: email,
+          password: password,
+        },
+      }),
+    })
+      .then((response) => {
+        console.log(response.json());
+        return response.json();
+      })
+      .then((json) => dispatch(login(json)));
+  };
+}
+
+export const createUser = (userInfo) => {
+  return { type: "CREATE_USER", payload: userInfo };
+};
+export function fetchNewUser(credentials) {
+  return (dispatch) => {
+    dispatch(createUser());
+    const { username, email, password } = credentials;
+    return fetch(`https://conduit.productionready.io/api/users`, {
+      method: "POST",
+      mode: "cors",
+      cache: "no-cache",
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+      redirect: "follow",
+      referrerPolicy: "no-referrer",
+      body: JSON.stringify({
+        user: {
+          username: username,
+          email: email,
+          password: password,
+        },
+      }),
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((json) => dispatch(createUser(json)));
   };
 }

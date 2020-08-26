@@ -50,6 +50,12 @@
   padding: 10px;
   box-sizing: border-box;
 }
+.input__field_error {
+  border: solid 1px red;
+}
+.input__field_ok {
+  border: solid 1px green;
+}
 .login__btn {
   background: #1890ff;
   border-radius: 4px;
