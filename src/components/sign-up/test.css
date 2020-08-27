@@ -1,0 +1,15 @@
+.input__field {
+  height: 40px;
+  background: #ffffff;
+  border: solid 1px #d9d9d9;
+  border-radius: 4px;
+  outline: none;
+  padding: 10px;
+  box-sizing: border-box;
+}
+.input__field_error {
+  border: solid 1px red;
+}
+.input__field_ok {
+  border: solid 1px green;
+}

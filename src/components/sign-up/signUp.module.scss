@@ -56,6 +56,22 @@
 .input__field_ok {
   border: solid 1px green;
 }
+.input__error_message {
+  font-family: "Roboto", sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 22px;
+  color: #f5222d;
+  margin: 0px 2px;
+}
+.display {
+  display: block;
+}
+.hide {
+  display: none;
+}
+
 .login__btn {
   background: #1890ff;
   border-radius: 4px;
