@@ -1,6 +1,6 @@
 .sign__container {
   width: 384px;
-  height: 374px;
+  max-height: 374px;
   display: flex;
   flex-direction: column;
   margin: 60px auto 0 auto;
@@ -43,6 +43,18 @@
   outline: none;
   padding: 10px;
   box-sizing: border-box;
+}
+.input__field_error {
+  border: solid 1px #f5222d;
+}
+.input__error_message {
+  font-family: "Roboto", sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 22px;
+  color: #f5222d;
+  margin: 0px 2px;
 }
 .login__btn {
   background: #1890ff;

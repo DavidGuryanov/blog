@@ -1,6 +1,6 @@
 .sign__container {
   width: 384px;
-  height: 600px;
+  max-height: 600px;
   display: flex;
   flex-direction: column;
   margin: 60px auto 0 auto;
@@ -51,7 +51,7 @@
   box-sizing: border-box;
 }
 .input__field_error {
-  border: solid 1px red;
+  border: solid 1px #f5222d;
 }
 .input__field_ok {
   border: solid 1px green;
