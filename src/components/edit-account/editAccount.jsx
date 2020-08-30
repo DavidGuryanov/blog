@@ -5,25 +5,40 @@ import { bindActionCreators } from "redux";
 import * as actions from "../../actions/actions";
 import { connect } from "react-redux";
 import * as styles from "./editAccount.module.scss";
+import { Redirect } from "react-router-dom";
 var classNames = require("classnames/bind");
 let cx = classNames.bind(styles);
 
-const EditAccount = () => {
+function removeEmptyFields(data) {
+  Object.keys(data).forEach((key) => {
+    if (data[key] === "" || data[key] == null) {
+      delete data[key];
+    }
+  });
+}
+
+const EditAccount = ({ updateCurrentUser, user }) => {
   const { register, handleSubmit, watch, errors, setError, trigger } = useForm({
     mode: "onChange",
   });
-  const onSubmit = (data) => console.log(data);
+  const { username, email, token, bio, image } = user;
+  const onSubmit = (data) => {
+    let dataObj = { ...data, token, bio };
+    removeEmptyFields(dataObj);
+    //console.log({ ...data, token, bio });
+    console.log(dataObj);
+    updateCurrentUser(dataObj);
+    return <Redirect to="/" />;
+  };
   return (
-    <form
-      className={styles.sign__container}
-      onSubmit={() => handleSubmit(onSubmit)}
-    >
+    <form className={styles.sign__container} onSubmit={handleSubmit(onSubmit)}>
       <h4 className={styles.header}>Edit account</h4>
       <label className={styles.sign__label} htmlFor="username">
         Username
       </label>
       <input
         type="text"
+        defaultValue={username}
         className={cx({
           input__field: true,
           input__field_error: errors.username,
@@ -64,6 +79,7 @@ const EditAccount = () => {
       </label>
       <input
         type="email"
+        defaultValue={email}
         className={cx({
           input__field: true,
           input__field_error: errors.email,
@@ -97,7 +113,7 @@ const EditAccount = () => {
         New password
       </label>
       <input
-        ref={register({ required: true, minLength: 6, maxLength: 40 })}
+        ref={register({ minLength: 6, maxLength: 40 })}
         type="password"
         className={cx({
           input__field: true,
@@ -105,7 +121,6 @@ const EditAccount = () => {
         })}
         id="password"
         name="password"
-        onChange={() => trigger("repassword")}
       ></input>
       {errors.password && errors.password.type === "required" && (
         <p
@@ -134,22 +149,23 @@ const EditAccount = () => {
           Password is too long
         </p>
       )}
-      <label className={styles.sign__label} htmlFor="avatar">
+      <label className={styles.sign__label} htmlFor="image">
         Avatar img (url)
       </label>
       <input
         type="text"
         className={cx({
           input__field: true,
-          input__field_error: errors.avatar,
+          input__field_error: errors.image,
         })}
-        id="avatar"
-        name="avatar"
+        id="image"
+        name="image"
+        defaultValue={image}
         ref={register({
           pattern: /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/,
         })}
       ></input>
-      {errors.avatar && errors.avatar.type === "pattern" && (
+      {errors.image && errors.image.type === "pattern" && (
         <p
           className={cx({
             input__error_message: true,
@@ -163,4 +179,22 @@ const EditAccount = () => {
   );
 };
 
-export default EditAccount;
+const mapStateToProps = (state) => {
+  //console.log(state);
+  return {
+    user: { ...state.reducerGetCurrentuser.currentUser },
+  };
+};
+const mapDispatchToProps = (dispatch) => {
+  // console.log(dispatch);
+  const { updateCurrentUser, fetchCurrentUser } = bindActionCreators(
+    actions,
+    dispatch
+  );
+  return {
+    updateCurrentUser,
+    fetchCurrentUser,
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(EditAccount);

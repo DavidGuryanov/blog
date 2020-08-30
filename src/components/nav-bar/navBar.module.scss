@@ -29,9 +29,34 @@
   width: 109px;
   height: 51px;
 }
-
+.avatarImg {
+  width: 46px;
+  height: 46px;
+}
 .signInBtn {
   margin-left: auto;
+}
+.createArticleBtn {
+  margin-left: auto;
+  height: 31.1px;
+  border: 1px solid #52c41a;
+  box-sizing: border-box;
+  border-radius: 5px;
+  font-size: 14px;
+  line-height: 22px;
+  color: #52c41a;
+  width: 113px;
+}
+.editAccountBtn {
+  width: initial;
+  height: initial;
+}
+.signOutBtn {
+  color: rgba(0, 0, 0, 0.75);
+  border: solid rgba(0, 0, 0, 0.75) 1px;
+  border-radius: 5px;
+  width: 109px;
+  height: 51px;
 }
 .header {
   font-family: "Inter", sans-serif;

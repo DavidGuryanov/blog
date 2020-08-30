@@ -1,25 +1,24 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import * as styles from "./signIn.module.scss";
 import { bindActionCreators } from "redux";
 import * as actions from "../../actions/actions";
 import { connect } from "react-redux";
-
-import * as styles from "./signIn.module.scss";
+import { Redirect } from "react-router-dom";
 var classNames = require("classnames/bind");
-
 let cx = classNames.bind(styles);
 
-const SignIn = () => {
+const SignIn = ({ fetchLogin, user }) => {
   const { register, handleSubmit, watch, errors, setError, trigger } = useForm({
     mode: "onChange",
   });
-  const onSubmit = (data) => console.log(data);
+  const onSubmit = (data) => fetchLogin(data);
+  if (user.isLoggedIn) {
+    return <Redirect to="/" />;
+  }
   return (
-    <form
-      className={styles.sign__container}
-      onSubmit={() => handleSubmit(onSubmit)}
-    >
+    <form className={styles.sign__container} onSubmit={handleSubmit(onSubmit)}>
       <h4 className={styles.header}>Sign In</h4>
 
       <label className={styles.sign__label} htmlFor="email">
@@ -79,7 +78,7 @@ const SignIn = () => {
           This field is required
         </p>
       )}
-      <input type="submit" value="Login" className={styles.login__btn} />
+      <input type="submit" value="Login" className={styles.login__btn}></input>
       <p className={styles.login__info}>
         Don't have an account?{" "}
         <Link to="/sign-up/" className={styles.login__link}>
@@ -90,4 +89,22 @@ const SignIn = () => {
   );
 };
 
-export default SignIn;
+const mapStateToProps = (state) => {
+  //console.log(state);
+  return {
+    user: { ...state.reducerGetCurrentuser },
+  };
+};
+const mapDispatchToProps = (dispatch) => {
+  // console.log(dispatch);
+  const { fetchLogin, fetchCurrentUser } = bindActionCreators(
+    actions,
+    dispatch
+  );
+  return {
+    fetchLogin,
+    fetchCurrentUser,
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(SignIn);

@@ -1,23 +1,24 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import * as styles from "./signUp.module.scss";
 import { bindActionCreators } from "redux";
 import * as actions from "../../actions/actions";
-
 import { connect } from "react-redux";
+import { Redirect } from "react-router-dom";
 
 var classNames = require("classnames/bind");
-
 let cx = classNames.bind(styles);
 
-const SignUp = ({ fetchNewUser, user }) => {
+const SignUp = ({ fetchNewUser, fetchCurrentUser, user }) => {
   const { register, handleSubmit, watch, errors, setError, trigger } = useForm({
     mode: "onChange",
   });
-  const onSubmit = (data) => console.log(data);
-  const letstest = watch("password");
 
+  const onSubmit = (data) => fetchNewUser(data);
+  if (user.isLoggedIn) {
+    return <Redirect to="/" />;
+  }
   return (
     <form className={styles.sign__container} onSubmit={handleSubmit(onSubmit)}>
       <h4 className={styles.header}>Create new account</h4>
@@ -205,15 +206,20 @@ const SignUp = ({ fetchNewUser, user }) => {
 };
 
 const mapStateToProps = (state) => {
+  console.log(state);
   return {
-    user: { ...state.reducerGetArticles },
+    user: { ...state.reducerGetCurrentuser },
   };
 };
 const mapDispatchToProps = (dispatch) => {
   // console.log(dispatch);
-  const { fetchNewUser } = bindActionCreators(actions, dispatch);
+  const { fetchNewUser, fetchCurrentUser } = bindActionCreators(
+    actions,
+    dispatch
+  );
   return {
     fetchNewUser,
+    fetchCurrentUser,
   };
 };
 
