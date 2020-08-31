@@ -68,6 +68,12 @@
   height: 40px;
   cursor: pointer;
 }
+input[type="submit"]:active {
+  background: #56adff;
+}
+input[type="submit"]:focus {
+  outline: none;
+}
 .login__info {
   font-family: "Roboto", sans-serif;
   font-size: 12px;

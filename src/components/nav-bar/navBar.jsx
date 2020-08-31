@@ -57,7 +57,7 @@ const NavBar = (props) => {
         <>
           <button
             className={createArticleBtn}
-            onClick={(e) => history.push("/profile/")}
+            onClick={(e) => history.push("/new-article/")}
           >
             Create article
           </button>
