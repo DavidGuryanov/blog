@@ -1,10 +1,12 @@
 const local = "http://localhost:3000/";
 const web = "https://conduit.productionready.io/";
-const urlBase = local;
+const urlBase = web;
 
 function checkErrors(response, dispatch) {
   if (!response.ok) {
+    console.log(response);
     response.json().then((json) => {
+      console.log(json);
       return dispatch(handleErrors(json));
     });
     throw Error(response.statusText);
@@ -120,6 +122,7 @@ export const getUser = (user) => {
 };
 
 export function fetchCurrentUser(user) {
+  console.log(user);
   const { email, token, username } = user.user;
   return (dispatch) => {
     dispatch(getUser());
@@ -127,7 +130,7 @@ export function fetchCurrentUser(user) {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+        Authorization: `Token ${token}`,
       },
       redirect: "follow",
       referrerPolicy: "no-referrer",
@@ -154,13 +157,14 @@ export const updUser = (info) => {
   return { type: "UPDATE_USER", payload: info };
 };
 export function updateCurrentUser(user) {
+  console.log(user);
   const { email, username, password, image, bio, token } = user;
   return (dispatch) => {
     return fetch(`${urlBase}api/user`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+        Authorization: `Token ${token}`,
       },
       redirect: "follow",
       referrerPolicy: "no-referrer",

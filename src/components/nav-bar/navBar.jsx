@@ -37,7 +37,10 @@ const NavBar = (props) => {
     pic = <Avatar src={avatar} size={46} />;
     if (!avatar) {
       pic = (
-        <Avatar style={{ color: "#ffffff", backgroundColor: "#1890ff" }}>
+        <Avatar
+          size={46}
+          style={{ color: "#ffffff", backgroundColor: "#1890ff" }}
+        >
           {username.slice(0, 1)}
         </Avatar>
       );
