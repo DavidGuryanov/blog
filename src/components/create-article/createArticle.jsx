@@ -11,17 +11,21 @@ let cx = classNames.bind(styles);
 
 //setTagList(["firstTag", "secondTag"]);
 
-const CreateArticle = ({ createNewArticle, user }) => {
+const CreateArticle = ({ createNewArticle, user, ok, isLoggedIn }) => {
   console.log(user);
   const { register, handleSubmit, watch, errors, setError, trigger } = useForm({
     mode: "onChange",
   });
   const [tagList, setTagList] = useState([]);
+  console.log(isLoggedIn);
+  if (!isLoggedIn || ok) {
+    return <Redirect to="/" />;
+  }
   const onSubmit = (data) => {
     let tagss = { tags: tagList };
     let dataObj = { ...tagss, ...data };
     // console.log({ ...tagss, ...data });
-    createNewArticle(dataObj, user.token);
+    createNewArticle(dataObj, user.token, user.username);
   };
   const add = (tag) => {
     let arr = [...tagList];
@@ -196,6 +200,8 @@ const mapStateToProps = (state) => {
   console.log(state);
   return {
     user: { ...state.reducerGetCurrentuser.currentUser },
+    ok: state.reducerSetStatus.ok,
+    isLoggedIn: state.reducerGetCurrentuser.isLoggedIn,
   };
 };
 const mapDispatchToProps = (dispatch) => {

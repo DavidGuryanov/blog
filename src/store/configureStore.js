@@ -8,7 +8,7 @@ import rootReducer from "./root-reducer";
 const persistConfig = {
   key: "root",
   storage: storage,
-  whitelist: ["reducerGetCurrentuser"],
+  whitelist: ["reducerGetCurrentuser", "reducerGetArticles"],
 };
 
 const composeEnhancers =

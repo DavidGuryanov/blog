@@ -75,3 +75,45 @@
   padding: 17px 14px 15px 19px;
   color: rgba(0, 0, 0, 0.75);
 }
+.btn {
+  width: 84px;
+  height: 35px;
+  font-size: 18px;
+  line-height: 28px;
+  color: rgba(0, 0, 0, 0.85);
+  outline: none;
+  background-color: #ffffff;
+  font-family: "Inter", sans-serif;
+  //margin: auto 22px auto 0;
+  border: none;
+  cursor: pointer;
+}
+.editArticleBtn {
+  margin-left: 12px;
+  height: 31.1px;
+  border: 1px solid #52c41a;
+  box-sizing: border-box;
+  border-radius: 5px;
+  font-size: 14px;
+  line-height: 22px;
+  color: #52c41a;
+  width: 66px;
+}
+.deleteArticleBtn {
+  margin-left: auto;
+  height: 31.1px;
+  border: 1px solid #f5222d;
+  box-sizing: border-box;
+  border-radius: 5px;
+  font-size: 14px;
+  line-height: 22px;
+  color: #f5222d;
+  width: 78px;
+}
+.template__container {
+  display: flex;
+  flex-direction: column;
+}
+.template__container2 {
+  display: flex;
+}

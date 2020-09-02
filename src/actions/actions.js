@@ -38,6 +38,45 @@ export function fetchArticles(offset = 0) {
       .then((json) => dispatch(getArticles(json)));
   };
 }
+export const getArticlesByAuthor = (array) => {
+  return { type: "GET_ARTICLES_BY_AUTHOR", payload: array };
+};
+export function fetchArticlesByAuthor(author) {
+  return (dispatch) => {
+    dispatch(getArticlesByAuthor());
+    return fetch(`${urlBase}api/articles?author=${author}`)
+      .then((response) => {
+        return response.json();
+      })
+      .then((json) => dispatch(getArticlesByAuthor(json)));
+  };
+}
+export function deleteArticle(slug, author, token) {
+  return (dispatch) => {
+    dispatch(setStatus("loading"));
+    return fetch(`${urlBase}api/articles/${slug}`, {
+      method: "DELETE",
+      mode: "cors",
+      cache: "no-cache",
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+        Authorization: `Token ${token}`,
+      },
+      redirect: "follow",
+      referrerPolicy: "no-referrer",
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((json) => {
+        console.log(json);
+        dispatch(fetchArticlesByAuthor(author));
+        return dispatch(setStatus("ok"));
+      })
+      .catch((error) => console.log("error", error));
+  };
+}
+
 export const getSingleArticle = (article) => {
   return { type: "GET_SINGLE_ARTICLE", payload: article };
 };
@@ -80,6 +119,8 @@ export function fetchLogin(credentials) {
 
       .then((json) => {
         dispatch({ type: "LOGIN", payload: json });
+        // console.log(json.user.username);
+        dispatch(fetchArticlesByAuthor(json.user.username));
         return dispatch(setStatus("ok"));
       })
       .catch((error) => console.log("error", error));
@@ -140,6 +181,7 @@ export function fetchCurrentUser(user) {
 
       .then((json) => {
         dispatch({ type: "GET_USER", payload: json });
+        dispatch(fetchArticlesByAuthor(json.user.username));
         return dispatch(setStatus("ok"));
       })
       .catch((error) => console.log("error", error));
@@ -193,10 +235,11 @@ export const newArticle = (article) => {
   return { type: "CREATE_ARTICLE", payload: article };
 };
 
-export function createNewArticle(article, token) {
+export function createNewArticle(article, token, username) {
   console.log(article);
   const { title, description, text, tags } = article;
   return (dispatch) => {
+    dispatch(setStatus("loading"));
     return fetch(`${urlBase}api/articles`, {
       method: "POST",
       headers: {
@@ -219,7 +262,10 @@ export function createNewArticle(article, token) {
         return response.json();
       })
       .then((json) => {
-        return dispatch(newArticle(json));
+        dispatch(fetchArticlesByAuthor(username));
+        dispatch({ type: "CREATE_ARTICLE", payload: json });
+        return dispatch(setStatus("ok"));
+        //return dispatch(newArticle(json));
       })
       .catch((error) => console.log("error", error));
   };

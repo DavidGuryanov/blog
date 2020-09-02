@@ -12,6 +12,9 @@ import "antd/dist/antd.css";
 import "./article_antd.css";
 
 import * as styles from "./article.module.scss";
+var classNames = require("classnames");
+const editArticleBtn = classNames(styles.btn, styles.editArticleBtn);
+const deleteArticleBtn = classNames(styles.btn, styles.deleteArticleBtn);
 
 function formatDate(date) {
   return format(new Date(date), "MMMM dd, yyyy");
@@ -31,7 +34,7 @@ function getTags(tags) {
 }
 
 const ArticleHeader = (props) => {
-  const { article } = props;
+  const { article, own, deleteArticle, user } = props;
   const {
     author: { bio, following, image, username },
     body,
@@ -44,7 +47,7 @@ const ArticleHeader = (props) => {
     title,
     updatedAt,
   } = article;
-
+  console.log(user.username);
   return (
     <div className={styles.article__header}>
       <div className={styles.header__likes}>
@@ -55,19 +58,42 @@ const ArticleHeader = (props) => {
         {getTags(tagList)}
         <div className={styles.article__annotation}>{description}</div>
       </div>
-
-      <div className={styles.article__author}>
-        <div>
-          <p className={styles.article__author_name}>{username}</p>
-          <p className={styles.article__author_date}>{formatDate(createdAt)}</p>
+      <div className={styles.template__container}>
+        <div className={styles.article__author}>
+          <div>
+            <p className={styles.article__author_name}>{username}</p>
+            <p className={styles.article__author_date}>
+              {formatDate(createdAt)}
+            </p>
+          </div>
+          <Avatar size={46} src={image} />
         </div>
-        <Avatar size={46} src={image} />
+        {own ? (
+          <div className={styles.template__container2}>
+            <button
+              className={deleteArticleBtn}
+              onClick={() => deleteArticle(slug, user.username, user.token)}
+            >
+              Delete
+            </button>
+            <button className={editArticleBtn}>Edit</button>
+          </div>
+        ) : null}
       </div>
     </div>
   );
 };
 
-const Article = ({ slug, result, fetchSingleArticle, getSingleArticle }) => {
+const Article = ({
+  slug,
+  result,
+  fetchSingleArticle,
+  getSingleArticle,
+  deleteArticle,
+  ownArticles,
+  isLoggedIn,
+  user,
+}) => {
   const {
     article: { article: currentArticle },
     loading,
@@ -80,6 +106,15 @@ const Article = ({ slug, result, fetchSingleArticle, getSingleArticle }) => {
     };
   }, []);
 
+  const checkIfOwn = ownArticles.find((e, i) => {
+    if (e.slug === slug && isLoggedIn) {
+      console.log(e.title);
+
+      return true;
+    }
+    //return false;
+  });
+
   if (currentArticle) {
     const {
       author: { bio, following, image, username },
@@ -88,14 +123,18 @@ const Article = ({ slug, result, fetchSingleArticle, getSingleArticle }) => {
       description,
       favorited,
       favoritesCount,
-
       tagList,
       title,
       updatedAt,
     } = currentArticle;
     return (
       <div className={styles.article__container}>
-        <ArticleHeader article={currentArticle}></ArticleHeader>
+        <ArticleHeader
+          article={currentArticle}
+          own={checkIfOwn}
+          deleteArticle={deleteArticle}
+          user={user}
+        ></ArticleHeader>
         <ReactMarkdown source={body} className={styles.article__text} />
       </div>
     );
@@ -108,17 +147,22 @@ const mapStateToProps = (state) => {
   //console.log(state);
   return {
     result: { ...state.reducerGetSingleArticle },
+    ownArticles: [...state.reducerGetArticles.articlesByAuthor],
+    isLoggedIn: state.reducerGetCurrentuser.isLoggedIn,
+    user: { ...state.reducerGetCurrentuser.currentUser },
   };
 };
 const mapDispatchToProps = (dispatch) => {
   // console.log(dispatch);
-  const { fetchSingleArticle, getSingleArticle } = bindActionCreators(
-    actions,
-    dispatch
-  );
+  const {
+    fetchSingleArticle,
+    getSingleArticle,
+    deleteArticle,
+  } = bindActionCreators(actions, dispatch);
   return {
     fetchSingleArticle,
     getSingleArticle,
+    deleteArticle,
     // sortFast,
     // transferAll,
     // transferNone,
