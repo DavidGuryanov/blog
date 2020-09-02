@@ -15,22 +15,21 @@ const CreateArticle = () => {
   const { register, handleSubmit, watch, errors, setError, trigger } = useForm({
     mode: "onChange",
   });
-  const onSubmit = (data) => console.log(data);
-  const [tagList, setTagList] = useState([1, 2, 3]);
-
+  const [tagList, setTagList] = useState([]);
+  const onSubmit = (data) => {
+    let tagss = { tags: tagList };
+    console.log({ ...tagss, ...data });
+  };
   const add = (tag) => {
     let arr = [...tagList];
-    console.log(arr);
     arr.push(tag);
-    console.log(arr);
     setTagList(arr);
-    console.log(tagList);
   };
   let count = 0;
-  let test = null;
+  let tags = null;
   let currentVal = "";
   if (tagList.length === 0) {
-    test = (
+    tags = (
       <div className={styles.create_article__tags_container} key={count}>
         <input
           type="text"
@@ -49,10 +48,9 @@ const CreateArticle = () => {
       </div>
     );
   } else {
-    test = tagList.map((val, index) => {
+    tags = tagList.map((val, index) => {
       count += 1;
-      //return console.log(value);
-      if (index == tagList.length - 1) {
+      if (index === tagList.length - 1) {
         return (
           <div className={styles.create_article__tags_container} key={count}>
             <input
@@ -64,7 +62,6 @@ const CreateArticle = () => {
               onChange={(e) => {
                 let arr = [...tagList];
                 arr[index] = e.target.value;
-                console.log(arr);
                 setTagList(arr);
               }}
             ></input>
@@ -73,7 +70,6 @@ const CreateArticle = () => {
               onClick={(e) => {
                 let arr = [...tagList];
                 arr.splice(index, 1);
-                console.log(arr);
                 setTagList(arr);
               }}
             >
@@ -96,7 +92,6 @@ const CreateArticle = () => {
               onChange={(e) => {
                 let arr = [...tagList];
                 arr[index] = e.target.value;
-                console.log(arr);
                 setTagList(arr);
               }}
             ></input>
@@ -105,7 +100,6 @@ const CreateArticle = () => {
               onClick={(e) => {
                 let arr = [...tagList];
                 arr.splice(index, 1);
-                console.log(arr);
                 setTagList(arr);
               }}
             >
@@ -115,12 +109,13 @@ const CreateArticle = () => {
         );
     });
   }
+
   return (
     <form
       className={styles.create_article__container}
       onSubmit={handleSubmit(onSubmit)}
     >
-      <button onClick={() => console.log(tagList)}>Test</button>
+      <button onClick={() => console.log(tagList)}>tags</button>
       <h4 className={styles.create_article__header}>Create new article</h4>
       <label className={styles.create_article__label} htmlFor="title">
         Title
@@ -185,20 +180,7 @@ const CreateArticle = () => {
       <label className={styles.create_article__label} htmlFor="tags">
         Tags
       </label>
-
-      {/* <div className={styles.create_article__tags_container}>
-        <input
-          type="text"
-          className={styles.create_article__input_field}
-          id="tags"
-          placeholder="Tag"
-        ></input>
-        
-        <button className={styles.del__btn}>Delete</button>
-      </div> */}
-
-      {test}
-
+      {tags}
       <input type="submit" value="Create" className={styles.submit__btn} />
     </form>
   );
