@@ -36,6 +36,14 @@ const MainPage = ({ articles, fetchArticles }) => {
                 return <Article slug={slug} />;
               }}
             />
+            <Route
+              path="/articles/:slug/edit"
+              exact
+              render={({ match }) => {
+                const { slug } = match.params;
+                return <EditArticle slug={slug} />;
+              }}
+            />
             <Route path="/sign-in/" exact component={SignIn} />
             <Route path="/sign-up/" exact component={SignUp} />
             <Route path="/profile/" exact component={EditAccount} />

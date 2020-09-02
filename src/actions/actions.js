@@ -7,7 +7,7 @@ function checkErrors(response, dispatch) {
     console.log(response);
     response.json().then((json) => {
       console.log(json);
-      return dispatch(handleErrors(json));
+      return dispatch(setStatus(json));
     });
     throw Error(response.statusText);
   } else if (response.ok) {
@@ -15,9 +15,14 @@ function checkErrors(response, dispatch) {
   }
 }
 
-export const handleErrors = (errors) => {
-  return { type: "HANDLE_ERRORS", payload: errors };
-};
+export function setStatus(status) {
+  if (status === "ok") {
+    return { type: "HANDLE_OK" };
+  } else if (status === "loading") {
+    return { type: "HANDLE_LOADING" };
+  }
+  return { type: "HANDLE_ERRORS", payload: status };
+}
 
 export const getArticles = (array) => {
   return { type: "GET_ARTICLES", payload: array };
@@ -47,12 +52,10 @@ export function fetchSingleArticle(slug) {
       .then((json) => dispatch(getSingleArticle(json)));
   };
 }
-export const login = (userInfo) => {
-  return { type: "LOGIN", payload: userInfo };
-};
 
 export function fetchLogin(credentials) {
   return (dispatch) => {
+    dispatch(setStatus("loading"));
     const { email, password } = credentials;
     return fetch(`${urlBase}api/users/login`, {
       method: "POST",
@@ -76,17 +79,16 @@ export function fetchLogin(credentials) {
       })
 
       .then((json) => {
-        return dispatch(login(json));
+        dispatch({ type: "LOGIN", payload: json });
+        return dispatch(setStatus("ok"));
       })
       .catch((error) => console.log("error", error));
   };
 }
 
-export const createUser = (userInfo) => {
-  return { type: "CREATE_USER", payload: userInfo };
-};
 export function fetchNewUser(credentials) {
   return (dispatch) => {
+    dispatch(setStatus("loading"));
     const { username, email, password } = credentials;
     return fetch(`${urlBase}api/users`, {
       method: "POST",
@@ -111,21 +113,17 @@ export function fetchNewUser(credentials) {
       })
 
       .then((json) => {
-        dispatch(createUser(json));
+        dispatch({ type: "CREATE_USER", payload: json });
         return dispatch(fetchCurrentUser(json));
       })
       .catch((error) => console.log("error", error));
   };
 }
-export const getUser = (user) => {
-  return { type: "GET_USER", payload: user };
-};
 
 export function fetchCurrentUser(user) {
-  console.log(user);
   const { email, token, username } = user.user;
   return (dispatch) => {
-    dispatch(getUser());
+    dispatch(setStatus("loading"));
     return fetch(`${urlBase}api/user`, {
       method: "GET",
       headers: {
@@ -141,7 +139,8 @@ export function fetchCurrentUser(user) {
       })
 
       .then((json) => {
-        return dispatch(getUser(json));
+        dispatch({ type: "GET_USER", payload: json });
+        return dispatch(setStatus("ok"));
       })
       .catch((error) => console.log("error", error));
   };
@@ -150,16 +149,11 @@ export function fetchCurrentUser(user) {
 export const logOut = () => {
   return { type: "LOG_OUT" };
 };
-export const updUser = (info) => {
-  if (info.errors) {
-    return { type: "UPDATE_USER", error: info };
-  }
-  return { type: "UPDATE_USER", payload: info };
-};
+
 export function updateCurrentUser(user) {
-  console.log(user);
   const { email, username, password, image, bio, token } = user;
   return (dispatch) => {
+    dispatch(setStatus("loading"));
     return fetch(`${urlBase}api/user`, {
       method: "PUT",
       headers: {
@@ -184,7 +178,48 @@ export function updateCurrentUser(user) {
         return response.json();
       })
       .then((json) => {
-        return dispatch(updUser(json));
+        //return dispatch(updUser(json));
+        dispatch({ type: "UPDATE_USER", payload: json });
+        return dispatch(setStatus("ok"));
+      })
+      .catch((error) => console.log("error", error));
+  };
+}
+
+export const newArticle = (article) => {
+  if (article.errors) {
+    return { type: "CREATE_ARTICLE", error: article };
+  }
+  return { type: "CREATE_ARTICLE", payload: article };
+};
+
+export function createNewArticle(article, token) {
+  console.log(article);
+  const { title, description, text, tags } = article;
+  return (dispatch) => {
+    return fetch(`${urlBase}api/articles`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Token ${token}`,
+      },
+      redirect: "follow",
+      referrerPolicy: "no-referrer",
+      body: JSON.stringify({
+        article: {
+          title: title,
+          description: description,
+          body: text,
+          tagList: tags,
+        },
+      }),
+    })
+      .then((response) => checkErrors(response, dispatch))
+      .then((response) => {
+        return response.json();
+      })
+      .then((json) => {
+        return dispatch(newArticle(json));
       })
       .catch((error) => console.log("error", error));
   };

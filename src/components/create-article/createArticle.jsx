@@ -11,18 +11,25 @@ let cx = classNames.bind(styles);
 
 //setTagList(["firstTag", "secondTag"]);
 
-const CreateArticle = () => {
+const CreateArticle = ({ createNewArticle, user }) => {
+  console.log(user);
   const { register, handleSubmit, watch, errors, setError, trigger } = useForm({
     mode: "onChange",
   });
   const [tagList, setTagList] = useState([]);
   const onSubmit = (data) => {
     let tagss = { tags: tagList };
-    console.log({ ...tagss, ...data });
+    let dataObj = { ...tagss, ...data };
+    // console.log({ ...tagss, ...data });
+    createNewArticle(dataObj, user.token);
   };
   const add = (tag) => {
     let arr = [...tagList];
+    if (!tag && !arr[arr.length - 1]) {
+      return null;
+    }
     arr.push(tag);
+    // console.log(arr);
     setTagList(arr);
   };
   let count = 0;
@@ -115,7 +122,6 @@ const CreateArticle = () => {
       className={styles.create_article__container}
       onSubmit={handleSubmit(onSubmit)}
     >
-      <button onClick={() => console.log(tagList)}>tags</button>
       <h4 className={styles.create_article__header}>Create new article</h4>
       <label className={styles.create_article__label} htmlFor="title">
         Title
@@ -186,4 +192,18 @@ const CreateArticle = () => {
   );
 };
 
-export default CreateArticle;
+const mapStateToProps = (state) => {
+  console.log(state);
+  return {
+    user: { ...state.reducerGetCurrentuser.currentUser },
+  };
+};
+const mapDispatchToProps = (dispatch) => {
+  // console.log(dispatch);
+  const { createNewArticle } = bindActionCreators(actions, dispatch);
+  return {
+    createNewArticle,
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(CreateArticle);

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, withRouter } from "react-router-dom";
 import { bindActionCreators } from "redux";
 import * as actions from "../../actions/actions";
@@ -17,18 +17,37 @@ const editAccountBtn = classNames(styles.btn, styles.editAccountBtn);
 
 const NavBar = (props) => {
   //props.logOut();
-  const { history, user, isLoggedIn, errors } = props;
-
+  const { history, user, isLoggedIn, errors, ok, loading } = props;
   const error = () => {
     for (const [key, value] of Object.entries(errors)) {
       message.error(`${key} error: ${key} ${value}`);
     }
   };
+
+  const success = () => {
+    message.success("Success");
+  };
+
+  const load = () => {
+    let test = message.loading({ content: "Action in progress", key: "a" });
+  };
+
+  // const load = message.loading("Action in progress", 1);
+  // load();
+
   useEffect(() => {
     if (Object.keys(errors).length > 0) {
+      message.destroy("a");
       error();
     }
-  }, [errors]);
+    if (ok) {
+      message.destroy("a");
+      success();
+    }
+    if (loading) {
+      load();
+    }
+  }, [errors, ok, loading]);
 
   let username, avatar, pic;
   if (isLoggedIn) {
@@ -103,7 +122,9 @@ const mapStateToProps = (state) => {
   return {
     user: { ...state.reducerGetCurrentuser.currentUser },
     isLoggedIn: state.reducerGetCurrentuser.isLoggedIn,
-    errors: state.reducerHandleErrors.errors,
+    errors: state.reducerSetStatus.errors,
+    ok: state.reducerSetStatus.ok,
+    loading: state.reducerSetStatus.loading,
   };
 };
 const mapDispatchToProps = (dispatch) => {
