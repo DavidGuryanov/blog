@@ -10,6 +10,9 @@ function reducerSetStatus(state = initialState, action) {
       return { errors: action.payload.errors, ok: false, loading: false };
     case "HANDLE_OK":
       return { errors: {}, ok: true, loading: false };
+    case "UNHANDLE_OK":
+      return { errors: {}, ok: false, loading: false };
+
     case "HANDLE_LOADING":
       return { errors: {}, ok: false, loading: true };
 

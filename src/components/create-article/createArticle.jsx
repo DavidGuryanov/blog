@@ -12,13 +12,14 @@ let cx = classNames.bind(styles);
 //setTagList(["firstTag", "secondTag"]);
 
 const CreateArticle = ({ createNewArticle, user, ok, isLoggedIn }) => {
-  console.log(user);
+  //console.log(user);
   const { register, handleSubmit, watch, errors, setError, trigger } = useForm({
     mode: "onChange",
   });
   const [tagList, setTagList] = useState([]);
-  console.log(isLoggedIn);
+  console.log(user.username);
   if (!isLoggedIn || ok) {
+    console.log("this");
     return <Redirect to="/" />;
   }
   const onSubmit = (data) => {
@@ -197,7 +198,7 @@ const CreateArticle = ({ createNewArticle, user, ok, isLoggedIn }) => {
 };
 
 const mapStateToProps = (state) => {
-  console.log(state);
+  //console.log(state);
   return {
     user: { ...state.reducerGetCurrentuser.currentUser },
     ok: state.reducerSetStatus.ok,

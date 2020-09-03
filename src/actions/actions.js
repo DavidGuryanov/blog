@@ -18,6 +18,8 @@ function checkErrors(response, dispatch) {
 export function setStatus(status) {
   if (status === "ok") {
     return { type: "HANDLE_OK" };
+  } else if (status === "unok") {
+    return { type: "UNHANDLE_OK" };
   } else if (status === "loading") {
     return { type: "HANDLE_LOADING" };
   }
@@ -71,7 +73,10 @@ export function deleteArticle(slug, author, token) {
       .then((json) => {
         console.log(json);
         dispatch(fetchArticlesByAuthor(author));
-        return dispatch(setStatus("ok"));
+        dispatch(setStatus("ok"));
+        setTimeout(() => {
+          dispatch(setStatus("unok"));
+        }, 1000);
       })
       .catch((error) => console.log("error", error));
   };
@@ -121,7 +126,10 @@ export function fetchLogin(credentials) {
         dispatch({ type: "LOGIN", payload: json });
         // console.log(json.user.username);
         dispatch(fetchArticlesByAuthor(json.user.username));
-        return dispatch(setStatus("ok"));
+        dispatch(setStatus("ok"));
+        setTimeout(() => {
+          dispatch(setStatus("unok"));
+        }, 1000);
       })
       .catch((error) => console.log("error", error));
   };
@@ -182,7 +190,10 @@ export function fetchCurrentUser(user) {
       .then((json) => {
         dispatch({ type: "GET_USER", payload: json });
         dispatch(fetchArticlesByAuthor(json.user.username));
-        return dispatch(setStatus("ok"));
+        dispatch(setStatus("ok"));
+        setTimeout(() => {
+          dispatch(setStatus("unok"));
+        }, 1000);
       })
       .catch((error) => console.log("error", error));
   };
@@ -222,7 +233,10 @@ export function updateCurrentUser(user) {
       .then((json) => {
         //return dispatch(updUser(json));
         dispatch({ type: "UPDATE_USER", payload: json });
-        return dispatch(setStatus("ok"));
+        dispatch(setStatus("ok"));
+        setTimeout(() => {
+          dispatch(setStatus("unok"));
+        }, 1000);
       })
       .catch((error) => console.log("error", error));
   };
@@ -264,8 +278,10 @@ export function createNewArticle(article, token, username) {
       .then((json) => {
         dispatch(fetchArticlesByAuthor(username));
         dispatch({ type: "CREATE_ARTICLE", payload: json });
-        return dispatch(setStatus("ok"));
-        //return dispatch(newArticle(json));
+        dispatch(setStatus("ok"));
+        setTimeout(() => {
+          dispatch(setStatus("unok"));
+        }, 1000);
       })
       .catch((error) => console.log("error", error));
   };

@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { bindActionCreators } from "redux";
-
+import { Redirect, withRouter } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 import { connect } from "react-redux";
 import Loading from "../status/loading";
 import * as actions from "../../actions/actions";
-import { Statistic, Tag, Avatar } from "antd";
-import { HeartOutlined } from "@ant-design/icons";
+import { Statistic, Tag, Avatar, Modal, Button, Space } from "antd";
+import { HeartOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
 import { format, formatDistance, formatRelative, subDays } from "date-fns";
 import "antd/dist/antd.css";
 import "./article_antd.css";
-
 import * as styles from "./article.module.scss";
+const { confirm } = Modal;
 var classNames = require("classnames");
 const editArticleBtn = classNames(styles.btn, styles.editArticleBtn);
 const deleteArticleBtn = classNames(styles.btn, styles.deleteArticleBtn);
@@ -32,57 +32,17 @@ function getTags(tags) {
     return <Tag className="tag">No tags available</Tag>;
   }
 }
-
-const ArticleHeader = (props) => {
-  const { article, own, deleteArticle, user } = props;
-  const {
-    author: { bio, following, image, username },
-    body,
-    createdAt,
-    description,
-    favorited,
-    favoritesCount,
-    slug,
-    tagList,
-    title,
-    updatedAt,
-  } = article;
-  console.log(user.username);
-  return (
-    <div className={styles.article__header}>
-      <div className={styles.header__likes}>
-        <div className={styles.article__likes}>
-          <h2 className={styles.article__title}>{title}</h2>
-          <Statistic value={favoritesCount} prefix={<HeartOutlined />} />
-        </div>
-        {getTags(tagList)}
-        <div className={styles.article__annotation}>{description}</div>
-      </div>
-      <div className={styles.template__container}>
-        <div className={styles.article__author}>
-          <div>
-            <p className={styles.article__author_name}>{username}</p>
-            <p className={styles.article__author_date}>
-              {formatDate(createdAt)}
-            </p>
-          </div>
-          <Avatar size={46} src={image} />
-        </div>
-        {own ? (
-          <div className={styles.template__container2}>
-            <button
-              className={deleteArticleBtn}
-              onClick={() => deleteArticle(slug, user.username, user.token)}
-            >
-              Delete
-            </button>
-            <button className={editArticleBtn}>Edit</button>
-          </div>
-        ) : null}
-      </div>
-    </div>
-  );
-};
+function showConfirm(slug, username, token, func) {
+  confirm({
+    title: "Are you sure you want to delete this article?",
+    icon: <ExclamationCircleOutlined />,
+    content: "This can't be undone",
+    onOk() {
+      func(slug, username, token);
+    },
+    onCancel() {},
+  });
+}
 
 const Article = ({
   slug,
@@ -93,6 +53,8 @@ const Article = ({
   ownArticles,
   isLoggedIn,
   user,
+  ok,
+  history,
 }) => {
   const {
     article: { article: currentArticle },
@@ -105,14 +67,13 @@ const Article = ({
       getSingleArticle("remove");
     };
   }, []);
-
+  if (ok) {
+    return <Redirect to="/" />;
+  }
   const checkIfOwn = ownArticles.find((e, i) => {
     if (e.slug === slug && isLoggedIn) {
-      console.log(e.title);
-
       return true;
     }
-    //return false;
   });
 
   if (currentArticle) {
@@ -129,12 +90,45 @@ const Article = ({
     } = currentArticle;
     return (
       <div className={styles.article__container}>
-        <ArticleHeader
-          article={currentArticle}
-          own={checkIfOwn}
-          deleteArticle={deleteArticle}
-          user={user}
-        ></ArticleHeader>
+        <div className={styles.article__header}>
+          <div className={styles.header__likes}>
+            <div className={styles.article__likes}>
+              <h2 className={styles.article__title}>{title}</h2>
+              <Statistic value={favoritesCount} prefix={<HeartOutlined />} />
+            </div>
+            {getTags(tagList)}
+            <div className={styles.article__annotation}>{description}</div>
+          </div>
+          <div className={styles.template__container}>
+            <div className={styles.article__author}>
+              <div>
+                <p className={styles.article__author_name}>{username}</p>
+                <p className={styles.article__author_date}>
+                  {formatDate(createdAt)}
+                </p>
+              </div>
+              <Avatar size={46} src={image} />
+            </div>
+            {checkIfOwn ? (
+              <div className={styles.template__container2}>
+                <button
+                  className={deleteArticleBtn}
+                  onClick={() =>
+                    showConfirm(slug, user.username, user.token, deleteArticle)
+                  }
+                >
+                  Delete
+                </button>
+                <button
+                  className={editArticleBtn}
+                  onClick={() => history.push(`/articles/${slug}/edit`)}
+                >
+                  Edit
+                </button>
+              </div>
+            ) : null}
+          </div>
+        </div>
         <ReactMarkdown source={body} className={styles.article__text} />
       </div>
     );
@@ -150,6 +144,7 @@ const mapStateToProps = (state) => {
     ownArticles: [...state.reducerGetArticles.articlesByAuthor],
     isLoggedIn: state.reducerGetCurrentuser.isLoggedIn,
     user: { ...state.reducerGetCurrentuser.currentUser },
+    ok: state.reducerSetStatus.ok,
   };
 };
 const mapDispatchToProps = (dispatch) => {
@@ -163,13 +158,10 @@ const mapDispatchToProps = (dispatch) => {
     fetchSingleArticle,
     getSingleArticle,
     deleteArticle,
-    // sortFast,
-    // transferAll,
-    // transferNone,
-    // transferOne,
-    // transferTwo,
-    // transferThree,
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Article);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withRouter(Article));
