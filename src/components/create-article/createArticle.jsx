@@ -9,15 +9,11 @@ import * as styles from "./createArticle.module.scss";
 var classNames = require("classnames/bind");
 let cx = classNames.bind(styles);
 
-//setTagList(["firstTag", "secondTag"]);
-
 const CreateArticle = ({ createNewArticle, user, ok, isLoggedIn }) => {
-  //console.log(user);
   const { register, handleSubmit, watch, errors, setError, trigger } = useForm({
     mode: "onChange",
   });
   const [tagList, setTagList] = useState([]);
-  console.log(user.username);
   if (!isLoggedIn || ok) {
     console.log("this");
     return <Redirect to="/" />;
@@ -25,7 +21,6 @@ const CreateArticle = ({ createNewArticle, user, ok, isLoggedIn }) => {
   const onSubmit = (data) => {
     let tagss = { tags: tagList };
     let dataObj = { ...tagss, ...data };
-    // console.log({ ...tagss, ...data });
     createNewArticle(dataObj, user.token, user.username);
   };
   const add = (tag) => {
@@ -34,7 +29,6 @@ const CreateArticle = ({ createNewArticle, user, ok, isLoggedIn }) => {
       return null;
     }
     arr.push(tag);
-    // console.log(arr);
     setTagList(arr);
   };
   let count = 0;

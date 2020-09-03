@@ -3,7 +3,7 @@
   flex-direction: column;
   padding: 48px 32px;
   width: 938px;
-  height: 701px;
+  min-height: 701px;
   background: #ffffff;
   border: 1px solid #d9d9d9;
   box-sizing: border-box;
@@ -51,8 +51,34 @@
   box-sizing: border-box;
   border-radius: 4px;
 }
+.edit_article__textarea:focus {
+  outline: none;
+  border: 2px solid #b0d0e6;
+}
 .edit_article__tags_container {
   margin-top: 5px;
+}
+
+.input__field {
+  height: 40px;
+  background: #ffffff;
+  border: solid 1px #d9d9d9;
+  border-radius: 4px;
+  outline: none;
+  padding: 10px;
+  box-sizing: border-box;
+}
+.input__field_error {
+  border: solid 1px #f5222d;
+}
+.input__error_message {
+  font-family: "Roboto", sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 22px;
+  color: #f5222d;
+  margin: 0px 2px;
 }
 .del__btn {
   height: 40px;
