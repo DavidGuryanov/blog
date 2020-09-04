@@ -6,7 +6,11 @@ import { connect } from "react-redux";
 import Loading from "../status/loading";
 import * as actions from "../../actions/actions";
 import { Statistic, Tag, Avatar, Modal, Button, Space } from "antd";
-import { HeartOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
+import {
+  HeartOutlined,
+  ExclamationCircleOutlined,
+  HeartFilled,
+} from "@ant-design/icons";
 import { format, formatDistance, formatRelative, subDays } from "date-fns";
 import "antd/dist/antd.css";
 import "./article_antd.css";
@@ -55,17 +59,14 @@ const Article = ({
   user,
   ok,
   history,
+  favoriteArticle,
 }) => {
   const {
     article: { article: currentArticle },
     loading,
   } = result;
-
   useEffect(() => {
-    fetchSingleArticle(slug);
-    return function cleanup() {
-      getSingleArticle("remove");
-    };
+    fetchSingleArticle(slug, user.token);
   }, []);
   if (ok) {
     return <Redirect to="/" />;
@@ -94,7 +95,27 @@ const Article = ({
           <div className={styles.header__likes}>
             <div className={styles.article__likes}>
               <h2 className={styles.article__title}>{title}</h2>
-              <Statistic value={favoritesCount} prefix={<HeartOutlined />} />
+              <Statistic
+                value={favoritesCount}
+                prefix={
+                  favorited ? (
+                    <HeartFilled
+                      style={{ color: "red" }}
+                      onClick={() => {
+                        console.log("del");
+                        favoriteArticle(user.token, slug, "DELETE");
+                      }}
+                    />
+                  ) : (
+                    <HeartOutlined
+                      onClick={() => {
+                        console.log("post");
+                        favoriteArticle(user.token, slug, "POST");
+                      }}
+                    />
+                  )
+                }
+              />
             </div>
             <div>{getTags(tagList)}</div>
 
@@ -139,7 +160,7 @@ const Article = ({
 };
 
 const mapStateToProps = (state) => {
-  //console.log(state);
+  console.log(state);
   return {
     result: { ...state.reducerGetSingleArticle },
     ownArticles: [...state.reducerGetArticles.articlesByAuthor],
@@ -149,16 +170,15 @@ const mapStateToProps = (state) => {
   };
 };
 const mapDispatchToProps = (dispatch) => {
-  // console.log(dispatch);
   const {
     fetchSingleArticle,
-    getSingleArticle,
     deleteArticle,
+    favoriteArticle,
   } = bindActionCreators(actions, dispatch);
   return {
     fetchSingleArticle,
-    getSingleArticle,
     deleteArticle,
+    favoriteArticle,
   };
 };
 

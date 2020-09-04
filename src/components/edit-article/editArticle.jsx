@@ -237,7 +237,11 @@ const EditArticle = ({
         Tags
       </label>
       {tags}
-      <input type="submit" value="Create" className={styles.submit__btn} />
+      <input
+        type="submit"
+        value="Save changes"
+        className={styles.submit__btn}
+      />
     </form>
   );
 };

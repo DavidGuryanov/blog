@@ -10,9 +10,13 @@ import "antd/dist/antd.css";
 import "./articleList_antd.css";
 import * as styles from "./articleList.module.scss";
 
-const ArticleList = ({ articles, fetchArticles }) => {
+const ArticleList = ({ articles, fetchArticles, user }) => {
   useEffect(() => {
-    fetchArticles();
+    if (user) {
+      fetchArticles(0, user.token);
+    } else {
+      fetchArticles();
+    }
   }, []);
   const [page, setPage] = useState(1);
   const articlesToShow = Object.values(articles);
@@ -30,7 +34,7 @@ const ArticleList = ({ articles, fetchArticles }) => {
           total={500}
           showSizeChanger={false}
           onChange={(index) => {
-            fetchArticles(index * 10 - 10);
+            fetchArticles(index * 10 - 10, user.token);
             setPage(index);
           }}
         />
@@ -41,6 +45,7 @@ const ArticleList = ({ articles, fetchArticles }) => {
 };
 const mapStateToProps = (state) => {
   return {
+    user: { ...state.reducerGetCurrentuser.currentUser },
     articles: { ...state.reducerGetArticles.articles },
   };
 };

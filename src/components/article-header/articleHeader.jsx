@@ -1,12 +1,18 @@
 import React from "react";
 import { withRouter } from "react-router-dom";
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
 import { Statistic, Tag, Avatar } from "antd";
-import { HeartOutlined } from "@ant-design/icons";
+import { HeartOutlined, HeartFilled } from "@ant-design/icons";
 import { format } from "date-fns";
+import * as actions from "../../actions/actions";
 import "antd/dist/antd.css";
 import "./articleHeader_antd.css";
 
 import * as styles from "./articleHeader.module.scss";
+
+var classNames = require("classnames/bind");
+let cx = classNames.bind(styles);
 
 function formatDate(date) {
   return format(new Date(date), "MMMM dd, yyyy");
@@ -25,7 +31,15 @@ function getTags(tags) {
   }
 }
 
-const ArticleHeader = ({ article, history, location, match, short }) => {
+const ArticleHeader = ({
+  article,
+  history,
+  location,
+  match,
+  short,
+  favoriteArticle,
+  user,
+}) => {
   const {
     author: { bio, following, image, username },
     body,
@@ -49,7 +63,28 @@ const ArticleHeader = ({ article, history, location, match, short }) => {
           >
             {title}
           </h2>
-          <Statistic value={favoritesCount} prefix={<HeartOutlined />} />
+
+          <Statistic
+            value={favoritesCount}
+            prefix={
+              favorited ? (
+                <HeartFilled
+                  style={{ color: "red" }}
+                  onClick={() => {
+                    console.log("del");
+                    favoriteArticle(user.token, slug, "DELETE");
+                  }}
+                />
+              ) : (
+                <HeartOutlined
+                  onClick={() => {
+                    console.log("post");
+                    favoriteArticle(user.token, slug, "POST");
+                  }}
+                />
+              )
+            }
+          />
         </div>
         <div className={styles.tags}>{getTags(tagList)}</div>
 
@@ -67,4 +102,23 @@ const ArticleHeader = ({ article, history, location, match, short }) => {
   );
 };
 
-export default withRouter(ArticleHeader);
+const mapStateToProps = (state) => {
+  return {
+    // result: { ...state.reducerGetSingleArticle },
+    // ownArticles: [...state.reducerGetArticles.articlesByAuthor],
+    // isLoggedIn: state.reducerGetCurrentuser.isLoggedIn,
+    user: { ...state.reducerGetCurrentuser.currentUser },
+    // ok: state.reducerSetStatus.ok,
+  };
+};
+const mapDispatchToProps = (dispatch) => {
+  const { favoriteArticle } = bindActionCreators(actions, dispatch);
+  return {
+    favoriteArticle,
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withRouter(ArticleHeader));
