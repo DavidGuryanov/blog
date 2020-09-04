@@ -61,12 +61,13 @@ const Article = ({
   history,
   favoriteArticle,
 }) => {
-  const {
-    article: { article: currentArticle },
-    loading,
-  } = result;
+  console.log(result);
+  const { article, loading } = result;
   useEffect(() => {
-    fetchSingleArticle(slug, user.token);
+    if (user) {
+      fetchSingleArticle(slug, user.token);
+    }
+    fetchSingleArticle(slug);
   }, []);
   if (ok) {
     return <Redirect to="/" />;
@@ -77,9 +78,10 @@ const Article = ({
     }
   });
 
-  if (currentArticle) {
+  if (article) {
+    console.log(article);
     const {
-      author: { bio, following, image, username },
+      author,
       body,
       createdAt,
       description,
@@ -88,7 +90,8 @@ const Article = ({
       tagList,
       title,
       updatedAt,
-    } = currentArticle;
+    } = article;
+    const { bio, following, image, username } = author;
     return (
       <div className={styles.article__container}>
         <div className={styles.article__header}>
@@ -162,7 +165,7 @@ const Article = ({
 const mapStateToProps = (state) => {
   console.log(state);
   return {
-    result: { ...state.reducerGetSingleArticle },
+    result: { ...state.reducerGetArticles },
     ownArticles: [...state.reducerGetArticles.articlesByAuthor],
     isLoggedIn: state.reducerGetCurrentuser.isLoggedIn,
     user: { ...state.reducerGetCurrentuser.currentUser },

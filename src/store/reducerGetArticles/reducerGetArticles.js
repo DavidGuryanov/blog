@@ -8,8 +8,13 @@ const initialState = {
 function reducerGetArticles(state = initialState, action) {
   switch (action.type) {
     case "GET_SINGLE_ARTICLE":
+      console.log(action.payload);
       if (action.payload) {
-        return { ...state, article: { ...action.payload }, loading: false };
+        return {
+          ...state,
+          article: action.payload.article,
+          loading: false,
+        };
       }
       return { ...state, article: {}, loading: true };
     case "GET_ARTICLES":
@@ -26,7 +31,9 @@ function reducerGetArticles(state = initialState, action) {
           loading: false,
         };
       }
+      return { ...state, articlesByAuthor: {}, loading: true };
     case "LIKE":
+      console.log("like");
       let test = [...state.articles];
       const checkIfOwn = test.find((e, i) => {
         if (e.slug === action.slug) {
@@ -39,6 +46,7 @@ function reducerGetArticles(state = initialState, action) {
       if (action.slug) {
         return { ...state, articles: test, loading: false };
       }
+      return { ...state };
     case "UNLIKE":
       console.log("unlike");
       let test2 = [...state.articles];
@@ -53,6 +61,7 @@ function reducerGetArticles(state = initialState, action) {
       if (action.slug) {
         return { ...state, articles: test2, loading: false };
       }
+      return { ...state };
     default:
       return state;
   }

@@ -115,7 +115,7 @@ export function fetchSingleArticle(slug, token) {
         .then((response) => {
           return response.json();
         })
-        .then((json) => dispatch(getArticles(json)))
+        .then((json) => dispatch({ type: "GET_SINGLE_ARTICLE", payload: json }))
         .catch((error) => console.log("error", error));
     }
     return fetch(`${urlBase}api/articles/${slug}`)
