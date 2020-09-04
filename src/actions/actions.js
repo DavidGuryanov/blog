@@ -48,9 +48,13 @@ export function fetchArticlesByAuthor(author) {
     dispatch(getArticlesByAuthor());
     return fetch(`${urlBase}api/articles?author=${author}`)
       .then((response) => {
+        console.log(response);
         return response.json();
       })
-      .then((json) => dispatch(getArticlesByAuthor(json)));
+      .then((json) => {
+        console.log(json);
+        dispatch(getArticlesByAuthor(json));
+      });
   };
 }
 export function deleteArticle(slug, author, token) {
@@ -278,6 +282,42 @@ export function createNewArticle(article, token, username) {
       .then((json) => {
         dispatch(fetchArticlesByAuthor(username));
         dispatch({ type: "CREATE_ARTICLE", payload: json });
+        dispatch(setStatus("ok"));
+        setTimeout(() => {
+          dispatch(setStatus("unok"));
+        }, 1000);
+      })
+      .catch((error) => console.log("error", error));
+  };
+}
+export function updateArticle(article, token, username, slug) {
+  console.log(article);
+  const { title, description, text, tags } = article;
+  return (dispatch) => {
+    dispatch(setStatus("loading"));
+    return fetch(`${urlBase}api/articles/${slug}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Token ${token}`,
+      },
+      redirect: "follow",
+      referrerPolicy: "no-referrer",
+      body: JSON.stringify({
+        article: {
+          title: title,
+          description: description,
+          body: text,
+          tagList: tags,
+        },
+      }),
+    })
+      .then((response) => checkErrors(response, dispatch))
+      .then((response) => {
+        return response.json();
+      })
+      .then((json) => {
+        dispatch(fetchArticlesByAuthor(username));
         dispatch(setStatus("ok"));
         setTimeout(() => {
           dispatch(setStatus("unok"));

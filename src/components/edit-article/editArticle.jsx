@@ -20,6 +20,7 @@ const EditArticle = ({
   isLoggedIn,
   slug,
   ownArticles,
+  updateArticle,
 }) => {
   const { register, handleSubmit, watch, errors, setError, trigger } = useForm({
     mode: "onBlur",
@@ -41,10 +42,11 @@ const EditArticle = ({
   }
 
   const onSubmit = (data) => {
-    // let tagss = { tags: tagList };
-    // let dataObj = { ...tagss, ...data };
-    // createNewArticle(dataObj, user.token, user.username);
-    console.log(data);
+    let tagss = { tags: tagList };
+    let dataObj = { ...tagss, ...data };
+    updateArticle(dataObj, user.token, user.username, slug);
+
+    //console.log(dataObj, user.token, user.username, slug);
   };
   const add = (tag) => {
     let arr = [...tagList];
@@ -71,6 +73,7 @@ const EditArticle = ({
           className={styles.add__btn}
           value="Add tag"
           onClick={() => add(currentVal)}
+          type="button"
         >
           Add tag
         </button>
@@ -96,6 +99,7 @@ const EditArticle = ({
             ></input>
             <button
               className={styles.del__btn}
+              type="button"
               onClick={(e) => {
                 let arr = [...tagList];
                 arr.splice(index, 1);
@@ -104,7 +108,11 @@ const EditArticle = ({
             >
               Delete
             </button>
-            <button className={styles.add__btn} onClick={() => add("")}>
+            <button
+              className={styles.add__btn}
+              onClick={() => add("")}
+              type="button"
+            >
               Add Tag
             </button>
           </div>
@@ -125,6 +133,7 @@ const EditArticle = ({
               }}
             ></input>
             <button
+              type="button"
               className={styles.del__btn}
               onClick={(e) => {
                 let arr = [...tagList];
@@ -138,103 +147,99 @@ const EditArticle = ({
         );
     });
   }
-  if (true) {
-    return (
-      <form
-        className={styles.edit_article__container}
-        onSubmit={handleSubmit(onSubmit)}
+  return (
+    <form
+      className={styles.edit_article__container}
+      onSubmit={handleSubmit(onSubmit)}
+    >
+      <h4
+        className={styles.edit_article__header}
+        onClick={() => console.log(currentArticle)}
       >
-        <h4
-          className={styles.edit_article__header}
-          onClick={() => console.log(currentArticle)}
+        Edit article
+      </h4>
+      <label className={styles.edit_article__label} htmlFor="title">
+        Title
+      </label>
+      <input
+        type="text"
+        className={styles.edit_article__input_field}
+        id="title"
+        name="title"
+        placeholder="Title"
+        value={currentArticle.title}
+        onChange={(e) => {
+          setCurrentArticle({ ...currentArticle, title: e.target.value });
+        }}
+        ref={register({ required: true })}
+      ></input>
+      {errors.title && errors.title.type === "required" && (
+        <p
+          className={cx({
+            input__error_message: true,
+          })}
         >
-          Edit article
-        </h4>
-        <label className={styles.edit_article__label} htmlFor="title">
-          Title
-        </label>
-        <input
-          type="text"
-          className={styles.edit_article__input_field}
-          id="title"
-          name="title"
-          placeholder="Title"
-          value={currentArticle.title}
-          onChange={(e) => {
-            setCurrentArticle({ ...currentArticle, title: e.target.value });
-          }}
-          ref={register({ required: true })}
-        ></input>
-        {errors.title && errors.title.type === "required" && (
-          <p
-            className={cx({
-              input__error_message: true,
-            })}
-          >
-            This field is required
-          </p>
-        )}
-        <label className={styles.edit_article__label} htmlFor="description">
-          Short description
-        </label>
-        <input
-          type="text"
-          className={styles.edit_article__input_field}
-          id="description"
-          placeholder="Description"
-          name="description"
-          value={currentArticle.description}
-          onChange={(e) => {
-            setCurrentArticle({
-              ...currentArticle,
-              description: e.target.value,
-            });
-          }}
-          ref={register({ required: true })}
-        ></input>
-        {errors.description && errors.description.type === "required" && (
-          <p
-            className={cx({
-              input__error_message: true,
-            })}
-          >
-            This field is required
-          </p>
-        )}
-        <label className={styles.edit_article__label} htmlFor="text">
-          Text
-        </label>
-        <textarea
-          className={styles.edit_article__textarea}
-          id="text"
-          rows="10"
-          placeholder="Text"
-          name="text"
-          value={currentArticle.body}
-          onChange={(e) => {
-            setCurrentArticle({ ...currentArticle, body: e.target.value });
-          }}
-          ref={register({ required: true })}
-        ></textarea>
-        {errors.text && errors.text.type === "required" && (
-          <p
-            className={cx({
-              input__error_message: true,
-            })}
-          >
-            This field is required
-          </p>
-        )}
-        <label className={styles.edit_article__label} htmlFor="tags">
-          Tags
-        </label>
-        {tags}
-        <input type="submit" value="Create" className={styles.submit__btn} />
-      </form>
-    );
-  }
-
-  return <h1>Loading</h1>;
+          This field is required
+        </p>
+      )}
+      <label className={styles.edit_article__label} htmlFor="description">
+        Short description
+      </label>
+      <input
+        type="text"
+        className={styles.edit_article__input_field}
+        id="description"
+        placeholder="Description"
+        name="description"
+        value={currentArticle.description}
+        onChange={(e) => {
+          setCurrentArticle({
+            ...currentArticle,
+            description: e.target.value,
+          });
+        }}
+        ref={register({ required: true })}
+      ></input>
+      {errors.description && errors.description.type === "required" && (
+        <p
+          className={cx({
+            input__error_message: true,
+          })}
+        >
+          This field is required
+        </p>
+      )}
+      <label className={styles.edit_article__label} htmlFor="text">
+        Text
+      </label>
+      <textarea
+        className={styles.edit_article__textarea}
+        id="text"
+        rows="10"
+        placeholder="Text"
+        name="text"
+        value={currentArticle.body}
+        onChange={(e) => {
+          setCurrentArticle({ ...currentArticle, body: e.target.value });
+        }}
+        ref={register({ required: true })}
+      ></textarea>
+      {errors.text && errors.text.type === "required" && (
+        <p
+          className={cx({
+            input__error_message: true,
+          })}
+        >
+          This field is required
+        </p>
+      )}
+      <label className={styles.edit_article__label} htmlFor="tags">
+        Tags
+      </label>
+      {tags}
+      <input type="submit" value="Create" className={styles.submit__btn} />
+    </form>
+  );
 };
 
 const mapStateToProps = (state) => {
@@ -247,9 +252,13 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => {
   // console.log(dispatch);
-  const { fetchArticles } = bindActionCreators(actions, dispatch);
+  const { fetchArticles, updateArticle } = bindActionCreators(
+    actions,
+    dispatch
+  );
   return {
     fetchArticles,
+    updateArticle,
   };
 };
 

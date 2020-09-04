@@ -96,7 +96,8 @@ const Article = ({
               <h2 className={styles.article__title}>{title}</h2>
               <Statistic value={favoritesCount} prefix={<HeartOutlined />} />
             </div>
-            {getTags(tagList)}
+            <div>{getTags(tagList)}</div>
+
             <div className={styles.article__annotation}>{description}</div>
           </div>
           <div className={styles.template__container}>

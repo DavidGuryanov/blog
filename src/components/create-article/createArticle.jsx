@@ -21,9 +21,11 @@ const CreateArticle = ({ createNewArticle, user, ok, isLoggedIn }) => {
   const onSubmit = (data) => {
     let tagss = { tags: tagList };
     let dataObj = { ...tagss, ...data };
+    console.log("sbm");
     createNewArticle(dataObj, user.token, user.username);
   };
   const add = (tag) => {
+    console.log(tag);
     let arr = [...tagList];
     if (!tag && !arr[arr.length - 1]) {
       return null;
@@ -48,6 +50,7 @@ const CreateArticle = ({ createNewArticle, user, ok, isLoggedIn }) => {
           className={styles.add__btn}
           value="Add tag"
           onClick={() => add(currentVal)}
+          type="button"
         >
           Add tag
         </button>
@@ -78,10 +81,15 @@ const CreateArticle = ({ createNewArticle, user, ok, isLoggedIn }) => {
                 arr.splice(index, 1);
                 setTagList(arr);
               }}
+              type="button"
             >
               Delete
             </button>
-            <button className={styles.add__btn} onClick={() => add("")}>
+            <button
+              className={styles.add__btn}
+              onClick={() => add("")}
+              type="button"
+            >
               Add Tag
             </button>
           </div>
@@ -102,6 +110,7 @@ const CreateArticle = ({ createNewArticle, user, ok, isLoggedIn }) => {
               }}
             ></input>
             <button
+              type="button"
               className={styles.del__btn}
               onClick={(e) => {
                 let arr = [...tagList];
