@@ -1,5 +1,1 @@
-todo:
-
-1. del ava
-2. bio
-3. loading in navbar
+https://blog-realworld-api.vercel.app/
