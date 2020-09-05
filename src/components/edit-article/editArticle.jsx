@@ -1,20 +1,15 @@
-import React, { useState, useEffect } from "react";
-
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { bindActionCreators } from "redux";
-import { Redirect, withRouter } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import { connect } from "react-redux";
-import { Statistic, Tag, Avatar, Modal, Button, Space } from "antd";
-import { HeartOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
-
 import * as actions from "../../actions/actions";
-
 import * as styles from "./editArticle.module.scss";
+
 var classNames = require("classnames/bind");
 let cx = classNames.bind(styles);
 
 const EditArticle = ({
-  createNewArticle,
   user,
   ok,
   isLoggedIn,
@@ -22,7 +17,7 @@ const EditArticle = ({
   ownArticles,
   updateArticle,
 }) => {
-  const { register, handleSubmit, watch, errors, setError, trigger } = useForm({
+  const { register, handleSubmit, errors } = useForm({
     mode: "onBlur",
   });
 
@@ -34,19 +29,22 @@ const EditArticle = ({
       return false;
     })
   );
-  const [tagList, setTagList] = useState([...currentArticle.tagList]);
-
-  if (!isLoggedIn || ok) {
-    console.log("this");
+  const [tagList, setTagList] = useState(["initial"]);
+  if (
+    currentArticle === undefined ||
+    !isLoggedIn ||
+    ok ||
+    user.username !== currentArticle.author.username
+  ) {
     return <Redirect to="/" />;
+  } else if (tagList[0] === "initial") {
+    setTagList([...currentArticle.tagList]);
   }
 
   const onSubmit = (data) => {
     let tagss = { tags: tagList };
     let dataObj = { ...tagss, ...data };
     updateArticle(dataObj, user.token, user.username, slug);
-
-    //console.log(dataObj, user.token, user.username, slug);
   };
   const add = (tag) => {
     let arr = [...tagList];
@@ -147,23 +145,22 @@ const EditArticle = ({
         );
     });
   }
+
   return (
     <form
       className={styles.edit_article__container}
       onSubmit={handleSubmit(onSubmit)}
     >
-      <h4
-        className={styles.edit_article__header}
-        onClick={() => console.log(currentArticle)}
-      >
-        Edit article
-      </h4>
+      <h4 className={styles.edit_article__header}>Edit article</h4>
       <label className={styles.edit_article__label} htmlFor="title">
         Title
       </label>
       <input
         type="text"
-        className={styles.edit_article__input_field}
+        className={cx({
+          edit_article__input_field: true,
+          edit_article__input_field_error: errors.title,
+        })}
         id="title"
         name="title"
         placeholder="Title"
@@ -187,7 +184,10 @@ const EditArticle = ({
       </label>
       <input
         type="text"
-        className={styles.edit_article__input_field}
+        className={cx({
+          edit_article__input_field: true,
+          edit_article__input_field_error: errors.description,
+        })}
         id="description"
         placeholder="Description"
         name="description"
@@ -213,7 +213,10 @@ const EditArticle = ({
         Text
       </label>
       <textarea
-        className={styles.edit_article__textarea}
+        className={cx({
+          edit_article__textarea: true,
+          edit_article__input_field_error: errors.text,
+        })}
         id="text"
         rows="10"
         placeholder="Text"
@@ -255,7 +258,6 @@ const mapStateToProps = (state) => {
   };
 };
 const mapDispatchToProps = (dispatch) => {
-  // console.log(dispatch);
   const { fetchArticles, updateArticle } = bindActionCreators(
     actions,
     dispatch

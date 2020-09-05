@@ -99,6 +99,11 @@
   color: #52c41a;
   width: 66px;
 }
+.editArticleBtn:hover {
+  cursor: pointer;
+  color: #77c74f;
+  border: 1px solid #77c74f;
+}
 .deleteArticleBtn {
   margin-left: auto;
   height: 31.1px;
@@ -109,6 +114,11 @@
   line-height: 22px;
   color: #f5222d;
   width: 78px;
+}
+.deleteArticleBtn:hover {
+  cursor: pointer;
+  color: #f05158;
+  border: 1px solid #f05158;
 }
 .template__container {
   display: flex;

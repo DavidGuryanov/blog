@@ -9,8 +9,8 @@ import { Redirect } from "react-router-dom";
 var classNames = require("classnames/bind");
 let cx = classNames.bind(styles);
 
-const SignIn = ({ fetchLogin, user }) => {
-  const { register, handleSubmit, watch, errors, setError, trigger } = useForm({
+const SignIn = ({ fetchLogin, user, loading }) => {
+  const { register, handleSubmit, errors, trigger } = useForm({
     mode: "onChange",
   });
   const onSubmit = (data) => fetchLogin(data);
@@ -78,7 +78,12 @@ const SignIn = ({ fetchLogin, user }) => {
           This field is required
         </p>
       )}
-      <input type="submit" value="Login" className={styles.login__btn}></input>
+      <input
+        type="submit"
+        value="Login"
+        className={styles.login__btn}
+        disabled={loading}
+      />
       <p className={styles.login__info}>
         Don't have an account?{" "}
         <Link to="/sign-up/" className={styles.login__link}>
@@ -90,13 +95,12 @@ const SignIn = ({ fetchLogin, user }) => {
 };
 
 const mapStateToProps = (state) => {
-  //console.log(state);
   return {
     user: { ...state.reducerGetCurrentuser },
+    loading: state.reducerSetStatus.loading,
   };
 };
 const mapDispatchToProps = (dispatch) => {
-  // console.log(dispatch);
   const { fetchLogin, fetchCurrentUser } = bindActionCreators(
     actions,
     dispatch

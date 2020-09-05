@@ -11,9 +11,6 @@ import "./articleHeader_antd.css";
 
 import * as styles from "./articleHeader.module.scss";
 
-var classNames = require("classnames/bind");
-let cx = classNames.bind(styles);
-
 function formatDate(date) {
   return format(new Date(date), "MMMM dd, yyyy");
 }
@@ -34,15 +31,12 @@ function getTags(tags) {
 const ArticleHeader = ({
   article,
   history,
-  location,
-  match,
-  short,
   favoriteArticle,
   user,
+  isLoggedIn,
 }) => {
   const {
-    author: { bio, following, image, username },
-    body,
+    author: { image, username },
     createdAt,
     description,
     favorited,
@@ -50,7 +44,6 @@ const ArticleHeader = ({
     slug,
     tagList,
     title,
-    updatedAt,
   } = article;
 
   return (
@@ -69,17 +62,19 @@ const ArticleHeader = ({
             prefix={
               favorited ? (
                 <HeartFilled
-                  style={{ color: "red" }}
+                  style={{ color: "#FF0707" }}
                   onClick={() => {
-                    console.log("del");
-                    favoriteArticle(user.token, slug, "DELETE");
+                    if (isLoggedIn) {
+                      favoriteArticle(user.token, slug, "DELETE");
+                    }
                   }}
                 />
               ) : (
                 <HeartOutlined
                   onClick={() => {
-                    console.log("post");
-                    favoriteArticle(user.token, slug, "POST");
+                    if (isLoggedIn) {
+                      favoriteArticle(user.token, slug, "POST");
+                    }
                   }}
                 />
               )
@@ -104,11 +99,8 @@ const ArticleHeader = ({
 
 const mapStateToProps = (state) => {
   return {
-    // result: { ...state.reducerGetSingleArticle },
-    // ownArticles: [...state.reducerGetArticles.articlesByAuthor],
-    // isLoggedIn: state.reducerGetCurrentuser.isLoggedIn,
+    isLoggedIn: state.reducerGetCurrentuser.isLoggedIn,
     user: { ...state.reducerGetCurrentuser.currentUser },
-    // ok: state.reducerSetStatus.ok,
   };
 };
 const mapDispatchToProps = (dispatch) => {

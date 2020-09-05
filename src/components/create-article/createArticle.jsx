@@ -9,23 +9,20 @@ import * as styles from "./createArticle.module.scss";
 var classNames = require("classnames/bind");
 let cx = classNames.bind(styles);
 
-const CreateArticle = ({ createNewArticle, user, ok, isLoggedIn }) => {
-  const { register, handleSubmit, watch, errors, setError, trigger } = useForm({
+const CreateArticle = ({ createNewArticle, user, ok, loading, isLoggedIn }) => {
+  const { register, handleSubmit, errors } = useForm({
     mode: "onChange",
   });
   const [tagList, setTagList] = useState([]);
   if (!isLoggedIn || ok) {
-    console.log("this");
     return <Redirect to="/" />;
   }
   const onSubmit = (data) => {
     let tagss = { tags: tagList };
     let dataObj = { ...tagss, ...data };
-    console.log("sbm");
     createNewArticle(dataObj, user.token, user.username);
   };
   const add = (tag) => {
-    console.log(tag);
     let arr = [...tagList];
     if (!tag && !arr[arr.length - 1]) {
       return null;
@@ -136,7 +133,10 @@ const CreateArticle = ({ createNewArticle, user, ok, isLoggedIn }) => {
       </label>
       <input
         type="text"
-        className={styles.create_article__input_field}
+        className={cx({
+          create_article__input_field: true,
+          create_article__input_field_error: errors.title,
+        })}
         id="title"
         name="title"
         placeholder="Title"
@@ -156,7 +156,10 @@ const CreateArticle = ({ createNewArticle, user, ok, isLoggedIn }) => {
       </label>
       <input
         type="text"
-        className={styles.create_article__input_field}
+        className={cx({
+          create_article__input_field: true,
+          create_article__input_field_error: errors.description,
+        })}
         id="description"
         placeholder="Description"
         name="description"
@@ -175,7 +178,10 @@ const CreateArticle = ({ createNewArticle, user, ok, isLoggedIn }) => {
         Text
       </label>
       <textarea
-        className={styles.create_article__textarea}
+        className={cx({
+          create_article__textarea: true,
+          create_article__input_field_error: errors.text,
+        })}
         id="text"
         rows="10"
         placeholder="Text"
@@ -195,21 +201,25 @@ const CreateArticle = ({ createNewArticle, user, ok, isLoggedIn }) => {
         Tags
       </label>
       {tags}
-      <input type="submit" value="Create" className={styles.submit__btn} />
+      <input
+        type="submit"
+        value="Create"
+        className={styles.submit__btn}
+        disabled={loading}
+      />
     </form>
   );
 };
 
 const mapStateToProps = (state) => {
-  //console.log(state);
   return {
     user: { ...state.reducerGetCurrentuser.currentUser },
     ok: state.reducerSetStatus.ok,
+    loading: state.reducerSetStatus.loading,
     isLoggedIn: state.reducerGetCurrentuser.isLoggedIn,
   };
 };
 const mapDispatchToProps = (dispatch) => {
-  // console.log(dispatch);
   const { createNewArticle } = bindActionCreators(actions, dispatch);
   return {
     createNewArticle,

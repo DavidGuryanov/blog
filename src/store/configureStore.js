@@ -1,7 +1,7 @@
 import { createStore, applyMiddleware, compose } from "redux";
 import { persistStore, persistReducer } from "redux-persist";
 import thunkMiddleware from "redux-thunk";
-import storage from "redux-persist/lib/storage"; // defaults to localStorage for web
+import storage from "redux-persist/lib/storage";
 
 import rootReducer from "./root-reducer";
 
@@ -19,7 +19,6 @@ const composeEnhancers =
 const enhancer = composeEnhancers(applyMiddleware(thunkMiddleware));
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 const store = createStore(persistedReducer, enhancer);
-const { dispatch } = store;
 let persistor = persistStore(store);
 
 export { persistor, store };

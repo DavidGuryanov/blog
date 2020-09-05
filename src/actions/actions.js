@@ -1,4 +1,4 @@
-const local = "http://localhost:3000/";
+//const local = "http://localhost:3000/";
 const web = "https://conduit.productionready.io/";
 const urlBase = web;
 
@@ -6,7 +6,6 @@ function checkErrors(response, dispatch) {
   if (!response.ok) {
     console.log(response);
     response.json().then((json) => {
-      console.log(json);
       return dispatch(setStatus(json));
     });
     throw Error(response.statusText);
@@ -22,7 +21,10 @@ export function setStatus(status) {
   } else if (status === "loading") {
     return { type: "HANDLE_LOADING" };
   }
-  return { type: "HANDLE_ERRORS", payload: status };
+  return (dispatch) => {
+    dispatch({ type: "HANDLE_ERRORS", payload: status });
+    dispatch({ type: "CLEAR_ERRORS" });
+  };
 }
 
 export const getArticles = (array) => {
@@ -58,14 +60,11 @@ export const getArticlesByAuthor = (array) => {
 };
 export function fetchArticlesByAuthor(author) {
   return (dispatch) => {
-    dispatch(getArticlesByAuthor());
     return fetch(`${urlBase}api/articles?author=${author}`)
       .then((response) => {
-        console.log(response);
         return response.json();
       })
       .then((json) => {
-        console.log(json);
         dispatch(getArticlesByAuthor(json));
       });
   };
@@ -88,7 +87,6 @@ export function deleteArticle(slug, author, token) {
         return response.json();
       })
       .then((json) => {
-        console.log(json);
         dispatch(fetchArticlesByAuthor(author));
         dispatch(setStatus("ok"));
         setTimeout(() => {
@@ -154,7 +152,6 @@ export function fetchLogin(credentials) {
 
       .then((json) => {
         dispatch({ type: "LOGIN", payload: json });
-        // console.log(json.user.username);
         dispatch(fetchArticlesByAuthor(json.user.username));
         dispatch(setStatus("ok"));
         setTimeout(() => {
@@ -198,7 +195,7 @@ export function fetchNewUser(credentials) {
   };
 }
 export function fetchCurrentUser(user) {
-  const { email, token, username } = user.user;
+  const { token } = user.user;
   return (dispatch) => {
     dispatch(setStatus("loading"));
     return fetch(`${urlBase}api/user`, {
@@ -227,7 +224,9 @@ export function fetchCurrentUser(user) {
   };
 }
 export const logOut = () => {
-  return { type: "LOG_OUT" };
+  return (dispatch) => {
+    dispatch({ type: "LOG_OUT" });
+  };
 };
 export function updateCurrentUser(user) {
   const { email, username, password, image, bio, token } = user;
@@ -274,7 +273,6 @@ export const newArticle = (article) => {
   return { type: "CREATE_ARTICLE", payload: article };
 };
 export function createNewArticle(article, token, username) {
-  console.log(article);
   const { title, description, text, tags } = article;
   return (dispatch) => {
     dispatch(setStatus("loading"));
@@ -311,7 +309,6 @@ export function createNewArticle(article, token, username) {
   };
 }
 export function updateArticle(article, token, username, slug) {
-  console.log(article);
   const { title, description, text, tags } = article;
   return (dispatch) => {
     dispatch(setStatus("loading"));
@@ -346,14 +343,11 @@ export function updateArticle(article, token, username, slug) {
       .catch((error) => console.log("error", error));
   };
 }
-
 export function favoriteArticle(token, slug, act) {
   return (dispatch) => {
     if (act === "POST") {
-      console.log("this");
       dispatch({ type: "LIKE", slug: slug });
     } else {
-      console.log("else");
       dispatch({ type: "UNLIKE", slug: slug });
     }
     return fetch(`${urlBase}api/articles/${slug}/favorite`, {

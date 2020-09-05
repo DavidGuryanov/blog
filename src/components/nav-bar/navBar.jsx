@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { Link, withRouter, Redirect } from "react-router-dom";
+import React, { useEffect } from "react";
+import { withRouter } from "react-router-dom";
 import { bindActionCreators } from "redux";
 import * as actions from "../../actions/actions";
 import { connect } from "react-redux";
-import { Avatar, Alert, message, Button, Space } from "antd";
-import { UserOutlined } from "@ant-design/icons";
+import { Avatar, message } from "antd";
 
 import * as styles from "../nav-bar/navBar.module.scss";
 var classNames = require("classnames");
@@ -16,7 +15,6 @@ const createArticleBtn = classNames(styles.btn, styles.createArticleBtn);
 const editAccountBtn = classNames(styles.btn, styles.editAccountBtn);
 
 const NavBar = (props) => {
-  //props.logOut();
   const { history, user, isLoggedIn, errors, ok, loading } = props;
   const error = () => {
     for (const [key, value] of Object.entries(errors)) {
@@ -29,11 +27,8 @@ const NavBar = (props) => {
   };
 
   const load = () => {
-    let test = message.loading({ content: "Action in progress", key: "a" });
+    message.loading({ content: "Action in progress", key: "a" });
   };
-
-  // const load = message.loading("Action in progress", 1);
-  // load();
 
   useEffect(() => {
     if (Object.keys(errors).length > 0) {
@@ -47,6 +42,7 @@ const NavBar = (props) => {
     if (loading) {
       load();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [errors, ok, loading]);
 
   let username, avatar, pic;

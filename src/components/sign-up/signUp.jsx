@@ -10,8 +10,8 @@ import { Redirect } from "react-router-dom";
 var classNames = require("classnames/bind");
 let cx = classNames.bind(styles);
 
-const SignUp = ({ fetchNewUser, fetchCurrentUser, user }) => {
-  const { register, handleSubmit, watch, errors, setError, trigger } = useForm({
+const SignUp = ({ fetchNewUser, user, loading }) => {
+  const { register, handleSubmit, watch, errors, trigger } = useForm({
     mode: "onChange",
   });
 
@@ -194,7 +194,12 @@ const SignUp = ({ fetchNewUser, fetchCurrentUser, user }) => {
           )}
         </label>
       </div>
-      <input type="submit" className={styles.login__btn} value="Create"></input>
+      <input
+        type="submit"
+        className={styles.login__btn}
+        value="Create"
+        disabled={loading}
+      />
       <p className={styles.login__info}>
         Already have an account?{" "}
         <Link to="/sign-in/" className={styles.login__link}>
@@ -206,13 +211,12 @@ const SignUp = ({ fetchNewUser, fetchCurrentUser, user }) => {
 };
 
 const mapStateToProps = (state) => {
-  console.log(state);
   return {
     user: { ...state.reducerGetCurrentuser },
+    loading: state.reducerSetStatus.loading,
   };
 };
 const mapDispatchToProps = (dispatch) => {
-  // console.log(dispatch);
   const { fetchNewUser, fetchCurrentUser } = bindActionCreators(
     actions,
     dispatch

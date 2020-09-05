@@ -73,6 +73,10 @@
   border: none;
   height: 40px;
 }
+.login__btn:hover {
+  cursor: pointer;
+  background: #319cff;
+}
 .login__info {
   font-family: "Roboto", sans-serif;
   font-size: 12px;

@@ -1,5 +1,4 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { bindActionCreators } from "redux";
 import * as actions from "../../actions/actions";
@@ -17,16 +16,14 @@ function removeEmptyFields(data) {
   });
 }
 
-const EditAccount = ({ updateCurrentUser, user }) => {
-  const { register, handleSubmit, watch, errors, setError, trigger } = useForm({
+const EditAccount = ({ updateCurrentUser, user, loading }) => {
+  const { register, handleSubmit, errors } = useForm({
     mode: "onChange",
   });
   const { username, email, token, bio, image } = user;
   const onSubmit = (data) => {
     let dataObj = { ...data, token, bio };
     removeEmptyFields(dataObj);
-    //console.log({ ...data, token, bio });
-    console.log(dataObj);
     updateCurrentUser(dataObj);
     return <Redirect to="/" />;
   };
@@ -162,7 +159,7 @@ const EditAccount = ({ updateCurrentUser, user }) => {
         name="image"
         defaultValue={image}
         ref={register({
-          pattern: /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/,
+          pattern: /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/,
         })}
       ></input>
       {errors.image && errors.image.type === "pattern" && (
@@ -174,19 +171,23 @@ const EditAccount = ({ updateCurrentUser, user }) => {
           Not a valid URL
         </p>
       )}
-      <input type="submit" value="Save" className={styles.login__btn} />
+      <input
+        type="submit"
+        value="Save"
+        className={styles.login__btn}
+        disabled={loading}
+      />
     </form>
   );
 };
 
 const mapStateToProps = (state) => {
-  //console.log(state);
   return {
     user: { ...state.reducerGetCurrentuser.currentUser },
+    loading: state.reducerSetStatus.loading,
   };
 };
 const mapDispatchToProps = (dispatch) => {
-  // console.log(dispatch);
   const { updateCurrentUser, fetchCurrentUser } = bindActionCreators(
     actions,
     dispatch

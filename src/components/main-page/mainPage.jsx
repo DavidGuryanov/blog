@@ -6,7 +6,6 @@ import SignIn from "../sign-in/signIn";
 import SignUp from "../sign-up/signUp";
 import EditAccount from "../edit-account/editAccount";
 import Article from "../article/article";
-import Loading from "../status/loading";
 import ArticleList from "../article-list/articleList";
 import CreateArticle from "../create-article/createArticle";
 import EditArticle from "../edit-article/editArticle";
@@ -68,7 +67,6 @@ const mapStateToProps = (state) => {
   };
 };
 const mapDispatchToProps = (dispatch) => {
-  // console.log(dispatch);
   const { fetchArticles } = bindActionCreators(actions, dispatch);
   return {
     fetchArticles,

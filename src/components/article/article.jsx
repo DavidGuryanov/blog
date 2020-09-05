@@ -1,17 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { bindActionCreators } from "redux";
 import { Redirect, withRouter } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 import { connect } from "react-redux";
 import Loading from "../status/loading";
 import * as actions from "../../actions/actions";
-import { Statistic, Tag, Avatar, Modal, Button, Space } from "antd";
+import { Statistic, Tag, Avatar, Modal } from "antd";
 import {
   HeartOutlined,
   ExclamationCircleOutlined,
   HeartFilled,
 } from "@ant-design/icons";
-import { format, formatDistance, formatRelative, subDays } from "date-fns";
+import { format } from "date-fns";
 import "antd/dist/antd.css";
 import "./article_antd.css";
 import * as styles from "./article.module.scss";
@@ -52,34 +52,36 @@ const Article = ({
   slug,
   result,
   fetchSingleArticle,
-  getSingleArticle,
   deleteArticle,
   ownArticles,
   isLoggedIn,
   user,
   ok,
+  loadingStatus,
+  errors,
   history,
   favoriteArticle,
 }) => {
-  console.log(result);
-  const { article, loading } = result;
   useEffect(() => {
     if (user) {
       fetchSingleArticle(slug, user.token);
+    } else {
+      fetchSingleArticle(slug);
     }
-    fetchSingleArticle(slug);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  if (ok) {
+
+  if (ok || errors.status) {
     return <Redirect to="/" />;
   }
   const checkIfOwn = ownArticles.find((e, i) => {
     if (e.slug === slug && isLoggedIn) {
       return true;
     }
+    return false;
   });
-
-  if (article) {
-    console.log(article);
+  if (result.article.title) {
+    const { article } = result;
     const {
       author,
       body,
@@ -89,9 +91,8 @@ const Article = ({
       favoritesCount,
       tagList,
       title,
-      updatedAt,
     } = article;
-    const { bio, following, image, username } = author;
+    const { image, username } = author;
     return (
       <div className={styles.article__container}>
         <div className={styles.article__header}>
@@ -103,17 +104,19 @@ const Article = ({
                 prefix={
                   favorited ? (
                     <HeartFilled
-                      style={{ color: "red" }}
+                      style={{ color: "#FF0707" }}
                       onClick={() => {
-                        console.log("del");
-                        favoriteArticle(user.token, slug, "DELETE");
+                        if (isLoggedIn) {
+                          favoriteArticle(user.token, slug, "DELETE");
+                        }
                       }}
                     />
                   ) : (
                     <HeartOutlined
                       onClick={() => {
-                        console.log("post");
-                        favoriteArticle(user.token, slug, "POST");
+                        if (isLoggedIn) {
+                          favoriteArticle(user.token, slug, "POST");
+                        }
                       }}
                     />
                   )
@@ -141,12 +144,14 @@ const Article = ({
                   onClick={() =>
                     showConfirm(slug, user.username, user.token, deleteArticle)
                   }
+                  disabled={loadingStatus}
                 >
                   Delete
                 </button>
                 <button
                   className={editArticleBtn}
                   onClick={() => history.push(`/articles/${slug}/edit`)}
+                  disabled={loadingStatus}
                 >
                   Edit
                 </button>
@@ -158,18 +163,18 @@ const Article = ({
       </div>
     );
   }
-
   return <Loading />;
 };
 
 const mapStateToProps = (state) => {
-  console.log(state);
   return {
     result: { ...state.reducerGetArticles },
     ownArticles: [...state.reducerGetArticles.articlesByAuthor],
     isLoggedIn: state.reducerGetCurrentuser.isLoggedIn,
     user: { ...state.reducerGetCurrentuser.currentUser },
     ok: state.reducerSetStatus.ok,
+    loadingStatus: state.reducerSetStatus.loading,
+    errors: state.reducerSetStatus.errors,
   };
 };
 const mapDispatchToProps = (dispatch) => {

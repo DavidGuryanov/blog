@@ -47,6 +47,12 @@
   color: #52c41a;
   width: 113px;
 }
+
+.createArticleBtn:hover {
+  cursor: pointer;
+  color: #77c74f;
+  border: 1px solid #77c74f;
+}
 .editAccountBtn {
   width: initial;
   height: initial;
@@ -58,6 +64,13 @@
   width: 109px;
   height: 51px;
 }
+.signOutBtn:hover {
+  color: rgba(34, 34, 34, 0.75);
+  border: solid rgba(34, 34, 34, 0.75) 1px;
+}
+.editAccountBtn:hover {
+  color: rgba(34, 34, 34, 0.75);
+}
 .header {
   font-family: "Inter", sans-serif;
   color: rgba(0, 0, 0, 0.85);
@@ -66,4 +79,7 @@
   margin: 0;
   font-weight: normal;
   margin: auto 0 auto 22px;
+}
+.header:hover {
+  color: rgba(34, 34, 34, 0.75);
 }

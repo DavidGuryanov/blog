@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import * as actions from "../../actions/actions";
 import { bindActionCreators } from "redux";
-import Article from "../article/article";
 import ArticleHeader from "../article-header/articleHeader";
 import Loading from "../status/loading";
 import { Pagination } from "antd";
@@ -17,6 +16,7 @@ const ArticleList = ({ articles, fetchArticles, user }) => {
     } else {
       fetchArticles();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const [page, setPage] = useState(1);
   const articlesToShow = Object.values(articles);
@@ -50,7 +50,6 @@ const mapStateToProps = (state) => {
   };
 };
 const mapDispatchToProps = (dispatch) => {
-  // console.log(dispatch);
   const { fetchArticles } = bindActionCreators(actions, dispatch);
   return {
     fetchArticles,

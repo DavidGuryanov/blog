@@ -45,6 +45,13 @@
   padding: 10px;
   box-sizing: border-box;
 }
+.edit_article__input_field:focus {
+  outline: none;
+  border: 1px solid #b0d0e6;
+}
+.edit_article__input_field_error {
+  border: solid 1px #f5222d !important;
+}
 .edit_article__textarea {
   background: #ffffff;
   border: 1px solid #d9d9d9;
@@ -53,7 +60,7 @@
 }
 .edit_article__textarea:focus {
   outline: none;
-  border: 2px solid #b0d0e6;
+  border: 1px solid #b0d0e6;
 }
 .edit_article__tags_container {
   margin-top: 5px;
@@ -97,6 +104,11 @@
   margin: 0px 8px;
   outline-color: #ffa7ab;
 }
+.del__btn:hover {
+  cursor: pointer;
+  color: #f05158;
+  border: 1px solid #f05158;
+}
 .add__btn {
   height: 40px;
   font-family: "Roboto", sans-serif;
@@ -114,6 +126,11 @@
   margin: 0px 8px;
   outline-color: #88c5ff;
 }
+.add__btn:hover {
+  cursor: pointer;
+  color: #55adff;
+  border: 1px solid #55adff;
+}
 .submit__btn {
   width: 319px;
   font-family: "Roboto", sans-serif;
@@ -129,4 +146,8 @@
   border-radius: 4px;
   border: none;
   outline-color: #88c5ff;
+}
+.submit__btn:hover {
+  cursor: pointer;
+  background: #319cff;
 }
