@@ -7,7 +7,15 @@ const initialState = {
 function reducerSetStatus(state = initialState, action) {
   switch (action.type) {
     case "HANDLE_ERRORS":
-      return { errors: action.payload, ok: false, loading: false };
+      if (action.payload.error) {
+        return { errors: { ...action.payload }, ok: false, loading: false };
+      } else {
+        return {
+          errors: { ...action.payload.errors },
+          ok: false,
+          loading: false,
+        };
+      }
     case "CLEAR_ERRORS":
       return { errors: {}, ok: false, loading: false };
     case "HANDLE_OK":

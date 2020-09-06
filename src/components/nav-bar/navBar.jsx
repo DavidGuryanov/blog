@@ -17,7 +17,7 @@ const editAccountBtn = classNames(styles.btn, styles.editAccountBtn);
 const NavBar = (props) => {
   const { history, user, isLoggedIn, errors, ok, loading } = props;
   const error = () => {
-    for (const [key, value] of Object.entries(errors.errors)) {
+    for (const [key, value] of Object.entries(errors)) {
       message.error(`${key} error: ${key} ${value}`);
     }
   };
