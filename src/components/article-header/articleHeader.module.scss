@@ -30,6 +30,10 @@
   cursor: pointer;
   word-break: break-all;
 }
+.article__title:hover {
+  color: #319cff;
+  text-decoration: underline;
+}
 .article__likes {
   display: flex;
   flex-direction: row;

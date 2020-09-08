@@ -1,6 +1,5 @@
 import React from "react";
-import { bindActionCreators } from "redux";
-import * as actions from "../../actions/actions";
+import { fetchArticles } from "../../actions/actions";
 import NavBar from "../nav-bar/navBar";
 import SignIn from "../sign-in/signIn";
 import SignUp from "../sign-up/signUp";
@@ -66,11 +65,5 @@ const mapStateToProps = (state) => {
     articles: { ...state.reducerGetArticles.articles },
   };
 };
-const mapDispatchToProps = (dispatch) => {
-  const { fetchArticles } = bindActionCreators(actions, dispatch);
-  return {
-    fetchArticles,
-  };
-};
 
-export default connect(mapStateToProps, mapDispatchToProps)(MainPage);
+export default connect(mapStateToProps, { fetchArticles })(MainPage);

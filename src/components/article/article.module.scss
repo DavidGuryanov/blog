@@ -101,8 +101,9 @@
 }
 .editArticleBtn:hover {
   cursor: pointer;
-  color: #77c74f;
-  border: 1px solid #77c74f;
+  color: #ffffff;
+  background-color: #52c41a;
+  border: 1px solid #52c41a;
 }
 .deleteArticleBtn {
   margin-left: auto;
@@ -117,8 +118,11 @@
 }
 .deleteArticleBtn:hover {
   cursor: pointer;
-  color: #f05158;
-  border: 1px solid #f05158;
+  color: #ffffff;
+  border: 1px solod #f5222d;
+  background-color: #f5222d;
+  // color: #f05158;
+  // border: 1px solid #f05158;
 }
 .template__container {
   display: flex;

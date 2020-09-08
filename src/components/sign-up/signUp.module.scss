@@ -1,6 +1,6 @@
 .sign__container {
   width: 384px;
-  max-height: 600px;
+  max-height: 700px;
   display: flex;
   flex-direction: column;
   margin: 60px auto 0 auto;
@@ -83,6 +83,10 @@
   border: none;
   height: 40px;
   cursor: pointer;
+}
+.login__btn:hover {
+  cursor: pointer;
+  background: #319cff;
 }
 .login__info {
   font-family: "Roboto", sans-serif;

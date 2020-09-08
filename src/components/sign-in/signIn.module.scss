@@ -1,6 +1,6 @@
 .sign__container {
   width: 384px;
-  max-height: 374px;
+  max-height: 400px;
   display: flex;
   flex-direction: column;
   margin: 60px auto 0 auto;
@@ -67,6 +67,10 @@
   border: none;
   height: 40px;
   cursor: pointer;
+}
+.login__btn:hover {
+  cursor: pointer;
+  background: #319cff;
 }
 input[type="submit"]:active {
   background: #56adff;

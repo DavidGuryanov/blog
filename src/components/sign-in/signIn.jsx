@@ -2,8 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import * as styles from "./signIn.module.scss";
-import { bindActionCreators } from "redux";
-import * as actions from "../../actions/actions";
+import { fetchLogin, fetchCurrentUser } from "../../actions/actions";
 import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
 var classNames = require("classnames/bind");
@@ -100,15 +99,7 @@ const mapStateToProps = (state) => {
     loading: state.reducerSetStatus.loading,
   };
 };
-const mapDispatchToProps = (dispatch) => {
-  const { fetchLogin, fetchCurrentUser } = bindActionCreators(
-    actions,
-    dispatch
-  );
-  return {
-    fetchLogin,
-    fetchCurrentUser,
-  };
-};
 
-export default connect(mapStateToProps, mapDispatchToProps)(SignIn);
+export default connect(mapStateToProps, { fetchLogin, fetchCurrentUser })(
+  SignIn
+);

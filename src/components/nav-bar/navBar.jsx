@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { withRouter } from "react-router-dom";
-import { bindActionCreators } from "redux";
-import * as actions from "../../actions/actions";
+import { fetchCurrentUser, logOut } from "../../actions/actions";
 import { connect } from "react-redux";
 import { Avatar, message } from "antd";
 
@@ -123,12 +122,7 @@ const mapStateToProps = (state) => {
     loading: state.reducerSetStatus.loading,
   };
 };
-const mapDispatchToProps = (dispatch) => {
-  const { fetchCurrentUser, logOut } = bindActionCreators(actions, dispatch);
-  return {
-    fetchCurrentUser,
-    logOut,
-  };
-};
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(NavBar));
+export default connect(mapStateToProps, { fetchCurrentUser, logOut })(
+  withRouter(NavBar)
+);

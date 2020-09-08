@@ -1,11 +1,10 @@
 import React from "react";
 import { withRouter } from "react-router-dom";
-import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import { Statistic, Tag, Avatar } from "antd";
 import { HeartOutlined, HeartFilled } from "@ant-design/icons";
 import { format } from "date-fns";
-import * as actions from "../../actions/actions";
+import { favoriteArticle } from "../../actions/actions";
 import "antd/dist/antd.css";
 import "./articleHeader_antd.css";
 
@@ -103,14 +102,7 @@ const mapStateToProps = (state) => {
     user: { ...state.reducerGetCurrentuser.currentUser },
   };
 };
-const mapDispatchToProps = (dispatch) => {
-  const { favoriteArticle } = bindActionCreators(actions, dispatch);
-  return {
-    favoriteArticle,
-  };
-};
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(withRouter(ArticleHeader));
+export default connect(mapStateToProps, { favoriteArticle })(
+  withRouter(ArticleHeader)
+);

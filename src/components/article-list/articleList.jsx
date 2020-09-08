@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
-import * as actions from "../../actions/actions";
-import { bindActionCreators } from "redux";
+import { fetchArticles } from "../../actions/actions";
 import ArticleHeader from "../article-header/articleHeader";
 import Loading from "../status/loading";
 import { Pagination } from "antd";
@@ -49,10 +48,5 @@ const mapStateToProps = (state) => {
     articles: { ...state.reducerGetArticles.articles },
   };
 };
-const mapDispatchToProps = (dispatch) => {
-  const { fetchArticles } = bindActionCreators(actions, dispatch);
-  return {
-    fetchArticles,
-  };
-};
-export default connect(mapStateToProps, mapDispatchToProps)(ArticleList);
+
+export default connect(mapStateToProps, { fetchArticles })(ArticleList);

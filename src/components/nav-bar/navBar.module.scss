@@ -29,12 +29,22 @@
   width: 109px;
   height: 51px;
 }
+.signUpBtn:hover {
+  color: #ffffff;
+  background-color: #52c41a;
+  border-color: #ffffff;
+}
 .avatarImg {
   width: 46px;
   height: 46px;
 }
 .signInBtn {
   margin-left: auto;
+}
+.signInBtn:hover {
+  border: solid rgba(0, 0, 0, 0.7) 1px;
+  border-radius: 5px;
+  color: rgba(0, 0, 0, 0.7);
 }
 .createArticleBtn {
   margin-left: auto;
@@ -50,8 +60,9 @@
 
 .createArticleBtn:hover {
   cursor: pointer;
-  color: #77c74f;
-  border: 1px solid #77c74f;
+  color: #ffffff;
+  background-color: #52c41a;
+  border-color: #ffffff;
 }
 .editAccountBtn {
   width: initial;
@@ -65,8 +76,9 @@
   height: 51px;
 }
 .signOutBtn:hover {
-  color: rgba(34, 34, 34, 0.75);
-  border: solid rgba(34, 34, 34, 0.75) 1px;
+  color: #ffffff;
+  background-color: rgba(34, 34, 34, 0.75);
+  border-color: rgba(34, 34, 34, 0.75);
 }
 .editAccountBtn:hover {
   color: rgba(34, 34, 34, 0.75);

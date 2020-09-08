@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { bindActionCreators } from "redux";
-import * as actions from "../../actions/actions";
+import { createNewArticle, updateArticle } from "../../actions/actions";
 import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
 import * as styles from "./createArticle.module.scss";
@@ -9,18 +8,50 @@ import * as styles from "./createArticle.module.scss";
 var classNames = require("classnames/bind");
 let cx = classNames.bind(styles);
 
-const CreateArticle = ({ createNewArticle, user, ok, loading, isLoggedIn }) => {
-  const { register, handleSubmit, errors } = useForm({
-    mode: "onChange",
-  });
+const CreateArticle = ({
+  createNewArticle,
+  updateArticle,
+  user,
+  ok,
+  loading,
+  isLoggedIn,
+  ownArticles,
+  slug,
+}) => {
+  const { register, handleSubmit, errors } = useForm({});
   const [tagList, setTagList] = useState([]);
+  const [currentArticle, setCurrentArticle] = useState();
+
+  useEffect(() => {
+    if (
+      currentArticle &&
+      JSON.stringify(tagList) !== JSON.stringify(currentArticle.tagList)
+    ) {
+      return setTagList([...currentArticle.tagList]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   if (!isLoggedIn || ok) {
     return <Redirect to="/" />;
+  } else if (ownArticles !== undefined && !currentArticle) {
+    setCurrentArticle(
+      ownArticles.find((e, i) => {
+        if (e.slug === slug && isLoggedIn) {
+          return true;
+        }
+        return false;
+      })
+    );
   }
   const onSubmit = (data) => {
     let tagss = { tags: tagList };
     let dataObj = { ...tagss, ...data };
-    createNewArticle(dataObj, user.token, user.username);
+    if (currentArticle) {
+      updateArticle(dataObj, user.token, user.username, slug);
+    } else {
+      createNewArticle(dataObj, user.token, user.username);
+    }
   };
   const add = (tag) => {
     let arr = [...tagList];
@@ -127,21 +158,46 @@ const CreateArticle = ({ createNewArticle, user, ok, loading, isLoggedIn }) => {
       className={styles.create_article__container}
       onSubmit={handleSubmit(onSubmit)}
     >
-      <h4 className={styles.create_article__header}>Create new article</h4>
+      {currentArticle && (
+        <h4 className={styles.create_article__header}>Edit article</h4>
+      )}
+      {!currentArticle && (
+        <h4 className={styles.create_article__header}>Create new article</h4>
+      )}
       <label className={styles.create_article__label} htmlFor="title">
         Title
       </label>
-      <input
-        type="text"
-        className={cx({
-          create_article__input_field: true,
-          create_article__input_field_error: errors.title,
-        })}
-        id="title"
-        name="title"
-        placeholder="Title"
-        ref={register({ required: true })}
-      ></input>
+      {currentArticle && (
+        <input
+          type="text"
+          className={cx({
+            create_article__input_field: true,
+            create_article__input_field_error: errors.title,
+          })}
+          id="title"
+          name="title"
+          placeholder="Title"
+          value={currentArticle.title}
+          onChange={(e) => {
+            setCurrentArticle({ ...currentArticle, title: e.target.value });
+          }}
+          ref={register({ required: true })}
+        ></input>
+      )}
+      {!currentArticle && (
+        <input
+          type="text"
+          className={cx({
+            create_article__input_field: true,
+            create_article__input_field_error: errors.title,
+          })}
+          id="title"
+          name="title"
+          placeholder="Title"
+          ref={register({ required: true })}
+        ></input>
+      )}
+
       {errors.title && errors.title.type === "required" && (
         <p
           className={cx({
@@ -154,17 +210,39 @@ const CreateArticle = ({ createNewArticle, user, ok, loading, isLoggedIn }) => {
       <label className={styles.create_article__label} htmlFor="description">
         Short description
       </label>
-      <input
-        type="text"
-        className={cx({
-          create_article__input_field: true,
-          create_article__input_field_error: errors.description,
-        })}
-        id="description"
-        placeholder="Description"
-        name="description"
-        ref={register({ required: true })}
-      ></input>
+      {currentArticle && (
+        <input
+          type="text"
+          className={cx({
+            create_article__input_field: true,
+            create_article__input_field_error: errors.description,
+          })}
+          id="description"
+          placeholder="Description"
+          name="description"
+          value={currentArticle.description}
+          onChange={(e) => {
+            setCurrentArticle({
+              ...currentArticle,
+              description: e.target.value,
+            });
+          }}
+          ref={register({ required: true })}
+        ></input>
+      )}
+      {!currentArticle && (
+        <input
+          type="text"
+          className={cx({
+            create_article__input_field: true,
+            create_article__input_field_error: errors.description,
+          })}
+          id="description"
+          placeholder="Description"
+          name="description"
+          ref={register({ required: true })}
+        ></input>
+      )}
       {errors.description && errors.description.type === "required" && (
         <p
           className={cx({
@@ -177,17 +255,36 @@ const CreateArticle = ({ createNewArticle, user, ok, loading, isLoggedIn }) => {
       <label className={styles.create_article__label} htmlFor="text">
         Text
       </label>
-      <textarea
-        className={cx({
-          create_article__textarea: true,
-          create_article__input_field_error: errors.text,
-        })}
-        id="text"
-        rows="10"
-        placeholder="Text"
-        name="text"
-        ref={register({ required: true })}
-      ></textarea>
+      {currentArticle && (
+        <textarea
+          className={cx({
+            create_article__textarea: true,
+            create_article__input_field_error: errors.text,
+          })}
+          id="text"
+          rows="10"
+          placeholder="Text"
+          name="text"
+          value={currentArticle.body}
+          onChange={(e) => {
+            setCurrentArticle({ ...currentArticle, body: e.target.value });
+          }}
+          ref={register({ required: true })}
+        ></textarea>
+      )}
+      {!currentArticle && (
+        <textarea
+          className={cx({
+            create_article__textarea: true,
+            create_article__input_field_error: errors.text,
+          })}
+          id="text"
+          rows="10"
+          placeholder="Text"
+          name="text"
+          ref={register({ required: true })}
+        ></textarea>
+      )}
       {errors.text && errors.text.type === "required" && (
         <p
           className={cx({
@@ -201,12 +298,22 @@ const CreateArticle = ({ createNewArticle, user, ok, loading, isLoggedIn }) => {
         Tags
       </label>
       {tags}
-      <input
-        type="submit"
-        value="Create"
-        className={styles.submit__btn}
-        disabled={loading}
-      />
+      {currentArticle && (
+        <input
+          type="submit"
+          value="Save changes"
+          className={styles.submit__btn}
+          disabled={loading}
+        />
+      )}
+      {!currentArticle && (
+        <input
+          type="submit"
+          value="Create"
+          className={styles.submit__btn}
+          disabled={loading}
+        />
+      )}
     </form>
   );
 };
@@ -219,11 +326,7 @@ const mapStateToProps = (state) => {
     isLoggedIn: state.reducerGetCurrentuser.isLoggedIn,
   };
 };
-const mapDispatchToProps = (dispatch) => {
-  const { createNewArticle } = bindActionCreators(actions, dispatch);
-  return {
-    createNewArticle,
-  };
-};
 
-export default connect(mapStateToProps, mapDispatchToProps)(CreateArticle);
+export default connect(mapStateToProps, { createNewArticle, updateArticle })(
+  CreateArticle
+);

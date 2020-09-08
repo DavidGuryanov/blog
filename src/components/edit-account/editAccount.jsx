@@ -1,7 +1,6 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import { bindActionCreators } from "redux";
-import * as actions from "../../actions/actions";
+import { updateCurrentUser, fetchCurrentUser } from "../../actions/actions";
 import { connect } from "react-redux";
 import * as styles from "./editAccount.module.scss";
 import { Redirect } from "react-router-dom";
@@ -187,15 +186,8 @@ const mapStateToProps = (state) => {
     loading: state.reducerSetStatus.loading,
   };
 };
-const mapDispatchToProps = (dispatch) => {
-  const { updateCurrentUser, fetchCurrentUser } = bindActionCreators(
-    actions,
-    dispatch
-  );
-  return {
-    updateCurrentUser,
-    fetchCurrentUser,
-  };
-};
 
-export default connect(mapStateToProps, mapDispatchToProps)(EditAccount);
+export default connect(mapStateToProps, {
+  updateCurrentUser,
+  fetchCurrentUser,
+})(EditAccount);

@@ -1,10 +1,13 @@
 import React, { useEffect } from "react";
-import { bindActionCreators } from "redux";
 import { Redirect, withRouter } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 import { connect } from "react-redux";
 import Loading from "../status/loading";
-import * as actions from "../../actions/actions";
+import {
+  fetchSingleArticle,
+  deleteArticle,
+  favoriteArticle,
+} from "../../actions/actions";
 import { Statistic, Tag, Avatar, Modal } from "antd";
 import {
   HeartOutlined,
@@ -177,20 +180,9 @@ const mapStateToProps = (state) => {
     errors: state.reducerSetStatus.errors,
   };
 };
-const mapDispatchToProps = (dispatch) => {
-  const {
-    fetchSingleArticle,
-    deleteArticle,
-    favoriteArticle,
-  } = bindActionCreators(actions, dispatch);
-  return {
-    fetchSingleArticle,
-    deleteArticle,
-    favoriteArticle,
-  };
-};
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(withRouter(Article));
+export default connect(mapStateToProps, {
+  fetchSingleArticle,
+  deleteArticle,
+  favoriteArticle,
+})(withRouter(Article));
